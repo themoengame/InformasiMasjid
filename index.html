@@ -66,7 +66,6 @@
 <script>
 const SPREADSHEET_ID = '1dKHiVnVhCBziOeAh_rabPfaaL8mpgtiPYmft2OxVGYQ';
 
-// Parsing CSV yang handal (menerima kutipan dan newline)
 function parseCSV(csvText) {
     const rows = [];
     let currentRow = [];
@@ -122,27 +121,27 @@ function parseCSV(csvText) {
 async function fetchSheet(sheetName) {
     const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
     const response = await fetch(url);
-    if (!response.ok) throw new Error(`HTTP ${response.status} untuk sheet ${sheetName}`);
+    if (!response.ok) throw new Error(`HTTP ${response.status} - ${sheetName}`);
     const csvText = await response.text();
-    const cleanText = csvText.replace(/^\uFEFF/, '');
-    return parseCSV(cleanText);
+    return parseCSV(csvText.replace(/^\uFEFF/, ''));
 }
 
 async function fetchProfil() {
     const data = await fetchSheet('profil');
-    console.log('Data mentah profil:', data);
+    console.log('Raw profil data:', data);
     const profil = {};
-    // Pastikan data memiliki kolom 'key' dan 'value'
+    // Validasi: harus ada kolom 'key' dan 'value'
+    if (data.length === 0) throw new Error('Sheet profil kosong');
+    if (!data[0].hasOwnProperty('key') || !data[0].hasOwnProperty('value')) {
+        throw new Error('Sheet profil tidak memiliki kolom "key" dan "value". Perbaiki format sheet (baris pertama: key | value)');
+    }
     data.forEach(row => {
         if (row.key && row.value !== undefined) {
             profil[row.key.trim()] = row.value.trim();
-        } else if (row[Object.keys(row)[0]] && row[Object.keys(row)[1]]) {
-            // fallback jika header berbeda
-            const keys = Object.keys(row);
-            profil[row[keys[0]].trim()] = row[keys[1]].trim();
         }
     });
-    console.log('Profil setelah parsing:', profil);
+    console.log('Profil parsed:', profil);
+    if (Object.keys(profil).length === 0) throw new Error('Tidak ada data key-value di sheet profil');
     return profil;
 }
 
@@ -159,14 +158,12 @@ async function loadAllData() {
         const hero = await fetchSheet('hero');
         const sosialMedia = await fetchSheet('sosial_media');
 
-        // Update header
         const namaMasjid = profil.nama_masjid || 'Masjid An-Nur';
         const tagline = profil.tagline || '';
         document.getElementById('namaMasjidHeader').innerHTML = `<i class="fas fa-mosque"></i> ${escapeHtml(namaMasjid)}`;
         document.getElementById('taglineHeader').innerText = escapeHtml(tagline);
         document.getElementById('footerText').innerHTML = `© 2025 ${escapeHtml(namaMasjid)} | Data dari Google Sheet`;
 
-        // Hero
         const heroData = hero[0] || {};
         document.getElementById('heroJudul').innerText = escapeHtml(heroData.judul || namaMasjid);
         document.getElementById('heroSubjudul').innerText = escapeHtml(heroData.subjudul || tagline);
@@ -174,17 +171,14 @@ async function loadAllData() {
             document.getElementById('hero-container').style.backgroundImage = `linear-gradient(rgba(15,59,44,0.85), rgba(30,111,76,0.85)), url('${escapeHtml(heroData.background_url)}')`;
         }
 
-        // Fasilitas
         const fasilitasRaw = profil.fasilitas || '';
         const fasilitasList = fasilitasRaw.split(/\r?\n/).filter(f => f.trim());
         const fasilitasHtml = fasilitasList.length ? `<ul>${fasilitasList.map(f => `<li>${escapeHtml(f)}</li>`).join('')}</ul>` : '<p>-</p>';
 
-        // WhatsApp
         let waNumber = (profil.wa_number || '').replace(/[^0-9]/g, '');
         if (waNumber.startsWith('0')) waNumber = '62' + waNumber.substring(1);
         const waLink = waNumber ? `https://wa.me/${waNumber}` : '#';
 
-        // Build HTML
         const html = `
             <section id="profil">
                 <h3 class="section-title">Profil Masjid</h3>
@@ -281,7 +275,11 @@ async function loadAllData() {
         document.getElementById('main-content').innerHTML = html;
     } catch (err) {
         console.error(err);
-        document.getElementById('main-content').innerHTML = `<div class="error-msg"><i class="fas fa-exclamation-triangle"></i> Gagal memuat data: ${err.message}<br><br>Pastikan semua sheet sudah dipublikasikan ke web (File → Share → Publish to web → pilih sheet → CSV).</div>`;
+        let msg = err.message;
+        if (msg.includes('kolom "key"')) {
+            msg = '❌ Sheet "profil" tidak memiliki kolom "key" dan "value". Silakan perbaiki format sheet sesuai panduan di atas (dua kolom: key | value).';
+        }
+        document.getElementById('main-content').innerHTML = `<div class="error-msg"><i class="fas fa-exclamation-triangle"></i> ${msg}<br><br>Pastikan sheet profil sudah dipublikasikan ke web (CSV) dan memiliki struktur dua kolom.</div>`;
     }
 }
 
