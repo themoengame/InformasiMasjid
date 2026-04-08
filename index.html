@@ -39,6 +39,7 @@
         .map-container { border-radius: 24px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
         footer { background: #0f3b2c; color: #ccc; padding: 32px 0; text-align: center; }
         .loading { text-align: center; padding: 50px; font-size: 1.2rem; }
+        .edit-btn { background: #f4c542; padding: 8px 16px; border-radius: 40px; text-decoration: none; color: #1e2a2e; display: inline-block; margin-top: 12px; }
         @media (max-width: 768px) { .hero h2 { font-size: 2rem; } .section-title { font-size: 1.6rem; } .nav-container { flex-direction: column; text-align: center; } }
     </style>
 </head>
@@ -71,27 +72,52 @@
 </footer>
 
 <script>
-    const SPREADSHEET_ID = '1dKHiVnVhCBziOeAh_rabPfaaL8mpgtiPYmft2OxVGYQ'; // GANTI DENGAN ID SPREADSHEET ANDA
+    const SPREADSHEET_ID = '1dKHiVnVhCBziOeAh_rabPfaaL8mpgtiPYmft2OxVGYQ';
 
-    // Fungsi fetch CSV dari sheet tertentu
+    // Fungsi fetch CSV dari sheet tertentu (lebih robust)
     async function fetchSheet(sheetName) {
         const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
         const response = await fetch(url);
         const csvText = await response.text();
-        // Parse CSV sederhana (abaikan kutipan kompleks, asumsikan tidak ada koma dalam value)
-        const rows = csvText.split('\n').filter(row => row.trim() !== '');
-        const headers = rows[0].split(',').map(h => h.replace(/^"|"$/g, ''));
+        // Parse CSV dengan mempertimbangkan kutipan dan koma dalam nilai
+        const rows = [];
+        let currentRow = [];
+        let currentField = '';
+        let inQuotes = false;
+        for (let i = 0; i < csvText.length; i++) {
+            const ch = csvText[i];
+            if (ch === '"') {
+                inQuotes = !inQuotes;
+            } else if (ch === ',' && !inQuotes) {
+                currentRow.push(currentField.trim().replace(/^"|"$/g, ''));
+                currentField = '';
+            } else if (ch === '\n' && !inQuotes) {
+                currentRow.push(currentField.trim().replace(/^"|"$/g, ''));
+                if (currentRow.length > 0 && currentRow.some(cell => cell !== '')) {
+                    rows.push(currentRow);
+                }
+                currentRow = [];
+                currentField = '';
+            } else {
+                currentField += ch;
+            }
+        }
+        if (currentField !== '' || currentRow.length > 0) {
+            currentRow.push(currentField.trim().replace(/^"|"$/g, ''));
+            if (currentRow.length > 0 && currentRow.some(cell => cell !== '')) rows.push(currentRow);
+        }
+        if (rows.length === 0) return [];
+        const headers = rows[0];
         const data = [];
         for (let i = 1; i < rows.length; i++) {
-            const values = rows[i].split(',').map(v => v.replace(/^"|"$/g, ''));
             const obj = {};
-            headers.forEach((h, idx) => { obj[h] = values[idx] || ''; });
+            headers.forEach((h, idx) => { obj[h] = rows[i][idx] || ''; });
             data.push(obj);
         }
         return data;
     }
 
-    // Konversi key-value sheet ke object
+    // Ambil profil (key-value)
     async function fetchProfil() {
         const data = await fetchSheet('profil');
         const profil = {};
@@ -118,7 +144,7 @@
             // Header
             document.getElementById('namaMasjidHeader').innerHTML = `<i class="fas fa-mosque"></i> ${profil.nama_masjid || 'Masjid'}`;
             document.getElementById('taglineHeader').innerText = profil.tagline || '';
-            document.getElementById('footerText').innerHTML = `© 2026 ${profil.nama_masjid || 'Masjid'} | Data dari Google Sheet`;
+            document.getElementById('footerText').innerHTML = `© 2025 ${profil.nama_masjid || 'Masjid'} | Data dari Google Sheet`;
 
             // Hero
             const heroData = hero[0] || {};
@@ -127,6 +153,15 @@
             if (heroData.background_url) {
                 document.getElementById('hero-container').style.backgroundImage = `linear-gradient(rgba(15,59,44,0.85), rgba(30,111,76,0.85)), url('${heroData.background_url}')`;
             }
+
+            // Format fasilitas (dari sheet profil, kolom 'fasilitas' dengan newline)
+            const fasilitasList = (profil.fasilitas || '').split('\n').filter(f => f.trim() !== '');
+            const fasilitasHtml = fasilitasList.length ? `<ul>${fasilitasList.map(f => `<li>${f}</li>`).join('')}</ul>` : '<p>-</p>';
+
+            // Format nomor WA (pastikan angka tanpa tanda +, misal 6281234567890)
+            let waNumber = (profil.wa_number || '').replace(/[^0-9]/g, '');
+            if (waNumber.startsWith('0')) waNumber = '62' + waNumber.substring(1);
+            const waLink = waNumber ? `https://wa.me/${waNumber}` : '#';
 
             // Bangun HTML utama
             let html = `
@@ -146,7 +181,7 @@
                         <div class="card">
                             <i class="fas fa-building fa-2x" style="color:#1e6f4c;"></i>
                             <h3 style="margin:12px 0">Fasilitas</h3>
-                            <p>${(profil.fasilitas || '').replace(/\n/g, '<br>')}</p>
+                            ${fasilitasHtml}
                         </div>
                     </div>
                 </section>
@@ -188,7 +223,7 @@
                                 <i class="fas ${k.icon || 'fa-calendar-alt'} fa-2x"></i>
                                 <h3>${k.judul}</h3>
                                 <p>${k.deskripsi}</p>
-                                <a href="${k.link}" target="_blank" class="edit-btn" style="display:inline-block; background:#f4c542; padding:8px 16px; border-radius:40px; text-decoration:none; color:#1e2a2e; margin-top:12px;">Detail →</a>
+                                <a href="${k.link}" target="_blank" class="edit-btn">Detail →</a>
                             </div>
                         `).join('')}
                     </div>
@@ -198,7 +233,7 @@
                 <section id="galeri">
                     <h3 class="section-title">Galeri Kegiatan</h3>
                     <div class="grid-4">
-                        ${galeri.sort((a,b)=>a.urutan - b.urutan).map(g => `
+                        ${galeri.sort((a,b)=> (a.urutan||0) - (b.urutan||0)).map(g => `
                             <div><img src="${g.url_gambar}" class="gallery-img" alt="${g.judul}" loading="lazy"><p>${g.judul}</p></div>
                         `).join('')}
                     </div>
@@ -223,10 +258,10 @@
                     <h3 class="section-title">Laporan Keuangan</h3>
                     <div class="card">
                         ${keuangan.map(k => `
-                            <div class="keuangan-row" style="display:flex; justify-content:space-between; padding:8px 0;"><span><strong>Periode</strong> ${k.bulan_tahun}</span></div>
+                            <div style="margin-bottom:8px;"><strong>Periode: ${k.bulan_tahun}</strong></div>
                             <div style="display:flex; justify-content:space-between;"><span>Pemasukan</span><span>Rp ${parseInt(k.pemasukan).toLocaleString()}</span></div>
                             <div style="display:flex; justify-content:space-between;"><span>Pengeluaran</span><span>Rp ${parseInt(k.pengeluaran).toLocaleString()}</span></div>
-                            <div style="display:flex; justify-content:space-between; font-weight:bold; margin-top:12px;"><span>Saldo</span><span>Rp ${parseInt(k.saldo).toLocaleString()}</span></div>
+                            <div style="display:flex; justify-content:space-between; font-weight:bold; margin-top:8px;"><span>Saldo</span><span>Rp ${parseInt(k.saldo).toLocaleString()}</span></div>
                         `).join('')}
                     </div>
                 </section>
@@ -241,10 +276,12 @@
                         <div class="card">
                             <i class="fas fa-phone-alt fa-2x"></i>
                             <h3>Hubungi Kami</h3>
-                            <p><i class="fab fa-whatsapp"></i> WhatsApp: <a href="https://wa.me/${profil.wa_number}" target="_blank">${profil.wa_number}</a></p>
+                            ${waNumber ? `<p><i class="fab fa-whatsapp"></i> WhatsApp: <a href="${waLink}" target="_blank" class="wa-link" style="display:inline-flex; margin-top:8px;">Chat Marbot</a></p>` : ''}
                             <p><i class="fas fa-envelope"></i> Email: ${profil.email || '-'}</p>
-                            <p><i class="fas fa-map-marker-alt"></i> ${profil.alamat || ''}</p>
-                            ${sosialMedia.map(sm => `<a href="${sm.url}" target="_blank" style="margin-right:12px;"><i class="fab fa-${sm.platform} fa-2x"></i></a>`).join('')}
+                            <p><i class="fas fa-map-marker-alt"></i> ${profil.alamat || 'Alamat belum diisi'}</p>
+                            <div style="margin-top:16px;">
+                                ${sosialMedia.map(sm => `<a href="${sm.url}" target="_blank" style="margin-right:16px; font-size:1.8rem; color:#1e6f4c;"><i class="fab fa-${sm.platform}"></i></a>`).join('')}
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -252,7 +289,7 @@
             document.getElementById('main-content').innerHTML = html;
         } catch (error) {
             console.error(error);
-            document.getElementById('main-content').innerHTML = `<div class="loading">Gagal memuat data. Periksa ID Spreadsheet dan pastikan setiap sheet dipublikasikan ke web. <br> Error: ${error.message}</div>`;
+            document.getElementById('main-content').innerHTML = `<div class="loading">Gagal memuat data. Pastikan semua sheet (profil, jadwal_sholat, dll) sudah dipublikasikan ke web (File → Share → Publish to web). <br> Error: ${error.message}</div>`;
         }
     }
 
