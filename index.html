@@ -2,408 +2,255 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Masjid An-Nur | Pusat Peradaban Islam Rahmatan Lil 'Alamin</title>
-    <!-- Font Awesome 6 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masjid An-Nur | Data Langsung dari Google Spreadsheet</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #fefcf5;
-            color: #1e2a2e;
-            line-height: 1.5;
-        }
-        :root {
-            --primary: #0b5e3c;
-            --primary-dark: #08452b;
-            --secondary: #d4a373;
-            --light-bg: #fff9ef;
-            --card-bg: #ffffff;
-            --border-light: #e9e0d0;
-            --shadow-sm: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.02);
-            --shadow-md: 0 20px 25px -12px rgba(0,0,0,0.08);
-        }
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-        /* Hero */
-        .hero {
-            background-size: cover;
-            background-position: center 30%;
-            position: relative;
-            min-height: 85vh;
-            display: flex;
-            align-items: center;
-            text-align: center;
-            color: white;
-        }
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(0, 40, 20, 0.75) 0%, rgba(0, 20, 10, 0.65) 100%);
-        }
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        .hero h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3.2rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-        .hero p {
-            font-size: 1.25rem;
-            margin-bottom: 2rem;
-        }
-        .hero-tagline {
-            display: inline-block;
-            background: rgba(212, 163, 115, 0.9);
-            backdrop-filter: blur(4px);
-            padding: 0.5rem 1.25rem;
-            border-radius: 40px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #1e2a2e;
-        }
-        section {
-            padding: 5rem 0;
-            border-bottom: 1px solid var(--border-light);
-        }
-        .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 2rem;
-            position: relative;
-            display: inline-block;
-        }
-        .section-title:after {
-            content: '';
-            display: block;
-            width: 60%;
-            height: 3px;
-            background: var(--secondary);
-            margin-top: 0.5rem;
-            border-radius: 4px;
-        }
-        .card {
-            background: var(--card-bg);
-            border-radius: 28px;
-            box-shadow: var(--shadow-sm);
-            padding: 1.8rem;
-            transition: transform 0.2s ease;
-            height: 100%;
-            border: 1px solid rgba(212, 163, 115, 0.2);
-        }
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
-        }
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-        }
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-        .info-list {
-            list-style: none;
-            padding: 0;
-        }
-        .info-list li {
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
-        .info-list li i {
-            width: 24px;
-            color: var(--secondary);
-            margin-top: 3px;
-        }
-        .schedule-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.95rem;
-        }
-        .schedule-table th, .schedule-table td {
-            padding: 12px 8px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-light);
-        }
-        .schedule-table th {
-            font-weight: 700;
-            color: var(--primary-dark);
-            background: #faf7f0;
-        }
-        .pengurus-card {
-            text-align: center;
-        }
-        .pengurus-img {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 1rem;
-            border: 3px solid var(--secondary);
-            background: #f0ede6;
-        }
-        .pengurus-name {
-            font-weight: 700;
-            font-size: 1.2rem;
-        }
-        .pengurus-jabatan {
-            color: var(--secondary);
-            font-weight: 500;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .galeri-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.5rem;
-        }
-        .galeri-item {
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            background: #fff;
-        }
-        .galeri-item img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            transition: transform 0.3s;
-        }
-        .galeri-item:hover img {
-            transform: scale(1.03);
-        }
-        .galeri-caption {
-            padding: 0.8rem;
-            font-weight: 600;
-            text-align: center;
-        }
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-            margin-bottom: 1.5rem;
-        }
-        .social-links a {
-            color: var(--primary-dark);
-            font-size: 1.8rem;
-            transition: 0.2s;
-        }
-        .social-links a:hover {
-            color: var(--secondary);
-        }
-        footer {
-            background: #0f2c1f;
-            color: #dcd7cc;
-            padding: 2rem 0;
-            text-align: center;
-            font-size: 0.85rem;
-        }
-        .loading {
-            text-align: center;
-            padding: 3rem;
-            font-size: 1.2rem;
-            color: var(--primary);
-        }
-        .error-msg {
-            color: #b91c1c;
-            background: #fee2e2;
-            padding: 1rem;
-            border-radius: 20px;
-        }
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.2rem; }
-            .section-title { font-size: 1.8rem; }
-            section { padding: 3rem 0; }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #fefcf5; color: #1e2a2e; }
+        :root { --primary: #0b5e3c; --primary-dark: #08452b; --secondary: #d4a373; --border-light: #e9e0d0; --card-bg: #ffffff; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        .hero { background-size: cover; background-position: center; position: relative; min-height: 85vh; display: flex; align-items: center; text-align: center; color: white; }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(0,40,20,0.75), rgba(0,20,10,0.65)); }
+        .hero-content { position: relative; z-index: 2; max-width: 800px; margin: 0 auto; padding: 2rem; }
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 1rem; }
+        .hero-tagline { background: rgba(212,163,115,0.9); padding: 0.5rem 1.25rem; border-radius: 40px; font-weight: 600; color: #1e2a2e; display: inline-block; }
+        section { padding: 5rem 0; border-bottom: 1px solid var(--border-light); }
+        .section-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 2rem; display: inline-block; }
+        .section-title:after { content: ''; display: block; width: 60%; height: 3px; background: var(--secondary); margin-top: 0.5rem; }
+        .card { background: var(--card-bg); border-radius: 28px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); padding: 1.8rem; border: 1px solid rgba(212,163,115,0.2); }
+        .grid-2, .grid-3 { display: grid; gap: 2rem; }
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(320px,1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); }
+        .info-list { list-style: none; }
+        .info-list li { display: flex; gap: 12px; margin-bottom: 1rem; }
+        .info-list li i { width: 24px; color: var(--secondary); }
+        .schedule-table { width: 100%; border-collapse: collapse; }
+        .schedule-table th, .schedule-table td { padding: 12px 8px; text-align: left; border-bottom: 1px solid var(--border-light); }
+        .schedule-table th { background: #faf7f0; color: var(--primary-dark); }
+        .pengurus-img { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; margin: 0 auto 1rem; border: 3px solid var(--secondary); }
+        .galeri-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 1.5rem; }
+        .galeri-item { border-radius: 24px; overflow: hidden; background: white; }
+        .galeri-item img { width: 100%; height: 200px; object-fit: cover; transition: 0.3s; }
+        .galeri-caption { padding: 0.8rem; text-align: center; font-weight: 600; }
+        .social-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem; }
+        .social-links a { font-size: 1.8rem; color: var(--primary-dark); }
+        .social-links a:hover { color: var(--secondary); }
+        footer { background: #0f2c1f; color: #dcd7cc; text-align: center; padding: 2rem; }
+        .loading { text-align: center; padding: 3rem; font-size: 1.2rem; color: var(--primary); }
+        .error-msg { background: #fee2e2; color: #b91c1c; padding: 1rem; border-radius: 20px; }
+        @media (max-width: 768px) { .hero h1 { font-size: 2rem; } .section-title { font-size: 1.8rem; } section { padding: 3rem 0; } }
     </style>
 </head>
 <body>
-<div id="hero-placeholder" class="hero" style="background-image: url('');">
+
+<div id="hero-section" class="hero" style="background-image: url('');">
     <div class="hero-overlay"></div>
     <div class="hero-content">
         <h1 id="hero-title">Memuat Data Masjid...</h1>
         <p id="hero-subtitle"></p>
-        <span id="hero-tagline" class="hero-tagline"><i class="fas fa-spinner fa-pulse"></i> Mengambil dari spreadsheet</span>
+        <span id="hero-tagline" class="hero-tagline"><i class="fas fa-spinner fa-pulse"></i> Menghubungkan ke Spreadsheet</span>
     </div>
 </div>
 
 <main>
-    <div class="container" id="main-content">
-        <div class="loading"><i class="fas fa-spinner fa-pulse"></i> Memuat data dari Google Spreadsheet...</div>
+    <div class="container" id="dynamic-content">
+        <div class="loading"><i class="fas fa-database"></i> Mengambil data dari Google Spreadsheet...</div>
     </div>
 </main>
 
 <footer>
-    <div class="container">
-        <p>© 2025 Masjid An-Nur | Data realtime dari Google Spreadsheet</p>
-        <p style="margin-top: 0.5rem; font-size: 0.7rem;">ID Spreadsheet: 1dKHiVnVhCBziOeAh_rabPfaaL8mpgtiPYmft2OxVGYQ</p>
-    </div>
+    <p>© 2025 Masjid An-Nur | Data realtime dari Google Spreadsheet (ID: 1dKHiVnVhCBziOeAh_rabPfaaL8mpgtiPYmft2OxVGYQ)</p>
 </footer>
 
 <script>
-    // Konfigurasi Spreadsheet ID
     const SPREADSHEET_ID = '1dKHiVnVhCBziOeAh_rabPfaaL8mpgtiPYmft2OxVGYQ';
-    // Fungsi untuk fetch data sheet via Google Visualization API (tanpa API key, asalkan publik)
-    async function fetchSheet(sheetName) {
+
+    // Fungsi mengambil data sheet menggunakan Google Visualization API (publik)
+    async function fetchSheetData(sheetName) {
         const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
         const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP ${response.status}: Gagal mengambil sheet ${sheetName}`);
         const text = await response.text();
-        // Format response: google.visualization.Query.setResponse(...)
+        // Hapus callback wrapper
         const jsonStr = text.substring(text.indexOf('(') + 1, text.lastIndexOf(')'));
         const json = JSON.parse(jsonStr);
-        const table = json.table;
-        const rows = table.rows;
-        const cols = table.cols.map(c => c.label);
-        // Konversi ke array objek
-        const data = rows.map(row => {
+        const cols = json.table.cols.map(c => c.label);
+        const rows = json.table.rows;
+        return rows.map(row => {
             const obj = {};
             row.c.forEach((cell, idx) => {
-                const value = cell ? cell.v : null;
-                obj[cols[idx]] = value;
+                obj[cols[idx]] = cell ? cell.v : null;
             });
             return obj;
         });
-        return data;
     }
 
-    // Helper: mengubah data key-value (sheet profil) menjadi object
+    // Helper untuk sheet profil yang berbentuk key-value
     async function getProfilMap() {
-        const rows = await fetchSheet('profil');
+        const rows = await fetchSheetData('profil');
         const map = {};
-        rows.forEach(row => {
-            if (row.key && row.value !== undefined) {
-                map[row.key] = row.value;
-            }
-        });
+        rows.forEach(row => { if (row.key) map[row.key] = row.value; });
         return map;
     }
 
-    // Render seluruh halaman
-    async function renderWebsite() {
-        const mainContainer = document.getElementById('main-content');
+    window.addEventListener('DOMContentLoaded', async () => {
+        const contentDiv = document.getElementById('dynamic-content');
         try {
-            // Ambil semua data paralel
-            const [profilMap, jadwalSholat, jadwalImam, jadwalMuadzin, kajianList, pengurusList, keuanganList, galeriList, heroList, sosialMediaList] = await Promise.all([
+            // Ambil semua sheet secara paralel
+            const [profilMap, jadwalSholat, jadwalImam, jadwalMuadzin, kajian, pengurus, keuangan, galeri, hero, sosialMedia] = await Promise.all([
                 getProfilMap(),
-                fetchSheet('jadwal_sholat'),
-                fetchSheet('jadwal_imam'),
-                fetchSheet('jadwal_muadzin'),
-                fetchSheet('kajian'),
-                fetchSheet('pengurus'),
-                fetchSheet('keuangan'),
-                fetchSheet('galeri'),
-                fetchSheet('hero'),
-                fetchSheet('sosial_media')
+                fetchSheetData('jadwal_sholat'),
+                fetchSheetData('jadwal_imam'),
+                fetchSheetData('jadwal_muadzin'),
+                fetchSheetData('kajian'),
+                fetchSheetData('pengurus'),
+                fetchSheetData('keuangan'),
+                fetchSheetData('galeri'),
+                fetchSheetData('hero'),
+                fetchSheetData('sosial_media')
             ]);
 
-            // Extract hero
-            const heroData = heroList[0] || {};
-            const heroBg = heroData.background_url || 'https://images.unsplash.com/photo-1584555616317-d9c3f2b54e64?q=80&w=2070&auto=format';
-            const heroJudul = heroData.judul || 'Masjid An-Nur';
-            const heroSubjudul = heroData.subjudul || 'Pusat kegiatan ibadah, dakwah, dan pemberdayaan umat.';
-            const tagline = profilMap.tagline || 'Rahmatan Lil Alamin';
-            
-            // Update hero section
-            const heroDiv = document.getElementById('hero-placeholder');
-            heroDiv.style.backgroundImage = `url('${heroBg}')`;
-            document.getElementById('hero-title').innerText = heroJudul;
-            document.getElementById('hero-subtitle').innerText = heroSubjudul;
-            document.getElementById('hero-tagline').innerHTML = `<i class="fas fa-seedling"></i> ${tagline}`;
+            // ========== HERO ==========
+            const heroData = hero[0] || {};
+            const heroBg = heroData.background_url || 'https://images.unsplash.com/photo-1584555616317-d9c3f2b54e64?auto=format&w=1600';
+            document.getElementById('hero-section').style.backgroundImage = `url('${heroBg}')`;
+            document.getElementById('hero-title').innerText = heroData.judul || 'Masjid An-Nur';
+            document.getElementById('hero-subtitle').innerText = heroData.subjudul || 'Pusat kegiatan ibadah, dakwah, dan pemberdayaan umat.';
+            document.getElementById('hero-tagline').innerHTML = `<i class="fas fa-seedling"></i> ${profilMap.tagline || 'Rahmatan Lil Alamin'}`;
 
-            // Bangun HTML konten
-            let html = '';
-
-            // === PROFIL SECTION ===
-            const namaMasjid = profilMap.nama_masjid || 'Masjid An-Nur';
-            const tahunBerdiri = profilMap.tahun_berdiri || '1985 M / 1405 H';
+            // ========== PROFIL ==========
+            const nama = profilMap.nama_masjid || 'Masjid An-Nur';
+            const tahun = profilMap.tahun_berdiri || '1985 M / 1405 H';
             const alamat = profilMap.alamat || 'Jl. Masjid No. 45, Kelurahan Sukamaju, Kota Bandung';
-            const waNumber = profilMap.wa_number ? profilMap.wa_number.toString().replace('.0', '') : '6281234567890';
+            const wa = profilMap.wa_number ? profilMap.wa_number.toString().replace('.0','') : '6281234567890';
             const email = profilMap.email || 'info@masjidannur.id';
             const visi = profilMap.visi || 'Menjadi pusat peradaban Islam yang rahmatan lil alamin';
-            let misiText = profilMap.misi || 'Mengoptimalkan ibadah dan kajian rutin<br>Memberdayakan ekonomi umat';
-            // split jika perlu
+            const misi = profilMap.misi || 'Mengoptimalkan ibadah dan kajian rutin<br>Memberdayakan ekonomi umat';
             const fasilitasRaw = profilMap.fasilitas || 'Ruang utama kapasitas 800 jamaah<br>Ruang wudhu & toilet bersih<br>Perpustakaan Islam';
-            const fasilitasList = fasilitasRaw.split('<br>');
-            
-            html += `
+            const fasilitasArr = fasilitasRaw.split('<br>');
+
+            // ========== JADWAL SHOLAT + IMAM + MUADZIN ==========
+            const prayerMap = new Map();
+            jadwalSholat.forEach(s => { prayerMap.set(s.sholat, { waktu: s.waktu }); });
+            jadwalImam.forEach(i => { 
+                if (prayerMap.has(i.sholat)) prayerMap.get(i.sholat).imam = i.nama_imam;
+                else prayerMap.set(i.sholat, { imam: i.nama_imam });
+            });
+            jadwalMuadzin.forEach(m => {
+                if (prayerMap.has(m.sholat)) prayerMap.get(m.sholat).muadzin = m.nama_muadzin;
+                else prayerMap.set(m.sholat, { muadzin: m.nama_muadzin });
+            });
+            const sholatOrder = ['Subuh', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya'];
+            let jadwalRows = '';
+            sholatOrder.forEach(sh => {
+                const d = prayerMap.get(sh) || {};
+                const waktu = d.waktu ? d.waktu.substring(0,5) : '-';
+                const imam = d.imam || '-';
+                const muadzin = d.muadzin || '-';
+                jadwalRows += `<tr><td><strong>${sh}</strong></td><td>${waktu}</td><td>${imam}</td><td>${muadzin}</td></tr>`;
+            });
+
+            // ========== KAJIAN ==========
+            let kajianHtml = '';
+            kajian.forEach(k => {
+                const icon = k.icon || 'fa-book';
+                kajianHtml += `
+                    <div class="card">
+                        <i class="fas ${icon}" style="font-size: 2rem; color: var(--secondary); margin-bottom: 0.8rem;"></i>
+                        <h3>${k.judul || 'Kajian'}</h3>
+                        <p>${k.deskripsi || ''}</p>
+                        <a href="${k.link || '#'}" target="_blank" class="btn-outline" style="display: inline-block; margin-top: 1rem; color: var(--primary);">Detail <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                `;
+            });
+
+            // ========== PENGURUS ==========
+            let pengurusHtml = '';
+            pengurus.forEach(p => {
+                const foto = p.foto_url && p.foto_url.trim() ? p.foto_url : 'https://via.placeholder.com/110?text=No+Image';
+                pengurusHtml += `
+                    <div class="card pengurus-card" style="text-align: center;">
+                        <img class="pengurus-img" src="${foto}" alt="${p.nama}" onerror="this.src='https://via.placeholder.com/110?text=Photo'">
+                        <div class="pengurus-name">${p.nama || '-'}</div>
+                        <div class="pengurus-jabatan" style="color: var(--secondary);">${p.jabatan || '-'}</div>
+                    </div>
+                `;
+            });
+
+            // ========== KEUANGAN ==========
+            let keuanganHtml = '';
+            if (keuangan.length) {
+                const k = keuangan[0];
+                keuanganHtml = `
+                    <div class="card">
+                        <h3>Laporan ${k.bulan_tahun || 'Terbaru'}</h3>
+                        <ul class="info-list">
+                            <li><i class="fas fa-arrow-down"></i> Pemasukan: Rp ${Number(k.pemasukan).toLocaleString('id-ID')}</li>
+                            <li><i class="fas fa-arrow-up"></i> Pengeluaran: Rp ${Number(k.pengeluaran).toLocaleString('id-ID')}</li>
+                            <li><i class="fas fa-wallet"></i> Saldo: Rp ${Number(k.saldo).toLocaleString('id-ID')}</li>
+                        </ul>
+                    </div>
+                `;
+            } else { keuanganHtml = '<div class="card">Belum ada data keuangan</div>'; }
+
+            // ========== GALERI ==========
+            let galeriHtml = '';
+            galeri.sort((a,b) => (a.urutan||0) - (b.urutan||0));
+            galeri.forEach(g => {
+                galeriHtml += `
+                    <div class="galeri-item">
+                        <img src="${g.url_gambar || 'https://via.placeholder.com/400x200?text=Galeri'}" alt="${g.judul}" onerror="this.src='https://via.placeholder.com/400x200?text=Gambar+Masjid'">
+                        <div class="galeri-caption">${g.judul || 'Kegiatan'}</div>
+                    </div>
+                `;
+            });
+
+            // ========== SOSIAL MEDIA ==========
+            let sosmedHtml = '';
+            const iconMap = { facebook: 'fab fa-facebook', instagram: 'fab fa-instagram', youtube: 'fab fa-youtube', twitter: 'fab fa-twitter' };
+            let linkHtml = '';
+            sosialMedia.forEach(sm => {
+                const plat = sm.platform?.toLowerCase();
+                const icon = iconMap[plat] || 'fas fa-link';
+                linkHtml += `<a href="${sm.url}" target="_blank"><i class="${icon}"></i></a>`;
+            });
+            sosmedHtml = `
+                <div class="card" style="text-align: center;">
+                    <div class="social-links">${linkHtml || '<i>Tidak ada media sosial</i>'}</div>
+                    <div class="info-list" style="max-width: 400px; margin: 0 auto;">
+                        <li><i class="fas fa-map-marker-alt"></i> ${alamat}</li>
+                        <li><i class="fab fa-whatsapp"></i> <a href="https://wa.me/${wa}" target="_blank">${wa}</a></li>
+                    </div>
+                </div>
+            `;
+
+            // ========== RENDER SEMUA SECTION ==========
+            contentDiv.innerHTML = `
                 <section id="profil">
                     <h2 class="section-title">Profil Masjid</h2>
                     <div class="grid-2">
                         <div class="card">
-                            <h3 style="color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-mosque"></i> ${namaMasjid}</h3>
+                            <h3><i class="fas fa-mosque"></i> ${nama}</h3>
                             <ul class="info-list">
-                                <li><i class="fas fa-calendar-alt"></i> <strong>Tahun Berdiri:</strong> ${tahunBerdiri}</li>
-                                <li><i class="fas fa-tag"></i> <strong>Tagline:</strong> ${tagline}</li>
+                                <li><i class="fas fa-calendar-alt"></i> <strong>Tahun Berdiri:</strong> ${tahun}</li>
                                 <li><i class="fas fa-map-marker-alt"></i> <strong>Alamat:</strong> ${alamat}</li>
-                                <li><i class="fab fa-whatsapp"></i> <strong>WhatsApp:</strong> <a href="https://wa.me/${waNumber}" target="_blank" style="color: var(--primary);">${waNumber}</a></li>
-                                <li><i class="fas fa-envelope"></i> <strong>Email:</strong> <a href="mailto:${email}" style="color: var(--primary);">${email}</a></li>
+                                <li><i class="fab fa-whatsapp"></i> <strong>WhatsApp:</strong> <a href="https://wa.me/${wa}">${wa}</a></li>
+                                <li><i class="fas fa-envelope"></i> <strong>Email:</strong> <a href="mailto:${email}">${email}</a></li>
                             </ul>
                         </div>
                         <div class="card">
-                            <h3 style="color: var(--primary); margin-bottom: 1rem;">Visi & Misi</h3>
-                            <p><strong>Visi :</strong><br>${visi}</p>
-                            <p style="margin-top: 1rem;"><strong>Misi :</strong><br>${misiText}</p>
-                            <hr style="margin: 1rem 0; border-color: var(--border-light);">
-                            <h4 style="font-weight: 600; margin-bottom: 0.5rem;"><i class="fas fa-building"></i> Fasilitas</h4>
-                            <ul style="padding-left: 1.5rem;">
-                                ${fasilitasList.map(f => `<li>${f.trim()}</li>`).join('')}
-                            </ul>
+                            <h3>Visi & Misi</h3>
+                            <p><strong>Visi:</strong> ${visi}</p>
+                            <p><strong>Misi:</strong><br>${misi}</p>
+                            <hr style="margin: 1rem 0;">
+                            <h4>Fasilitas</h4>
+                            <ul>${fasilitasArr.map(f => `<li>${f}</li>`).join('')}</ul>
                         </div>
                     </div>
                 </section>
-            `;
 
-            // === JADWAL SHOLAT + IMAM + MUADZIN ===
-            // Gabungkan berdasarkan nama sholat
-            const prayerMap = new Map();
-            jadwalSholat.forEach(s => { prayerMap.set(s.sholat, { waktu: s.waktu }); });
-            jadwalImam.forEach(i => { 
-                if(prayerMap.has(i.sholat)) prayerMap.get(i.sholat).imam = i.nama_imam; 
-                else prayerMap.set(i.sholat, { imam: i.nama_imam });
-            });
-            jadwalMuadzin.forEach(m => {
-                if(prayerMap.has(m.sholat)) prayerMap.get(m.sholat).muadzin = m.nama_muadzin;
-                else prayerMap.set(m.sholat, { muadzin: m.nama_muadzin });
-            });
-            const prayerOrder = ['Subuh', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya'];
-            let jadwalRows = '';
-            prayerOrder.forEach(sh => {
-                const data = prayerMap.get(sh) || {};
-                const waktu = data.waktu ? data.waktu.substring(0,5) : '-';
-                const imam = data.imam || '-';
-                const muadzin = data.muadzin || '-';
-                jadwalRows += `<tr><td><strong>${sh}</strong></td><td>${waktu}</td><td>${imam}</td><td>${muadzin}</td></tr>`;
-            });
-            html += `
                 <section id="jadwal">
                     <h2 class="section-title">Jadwal Sholat & Imam</h2>
                     <div class="card" style="padding: 0; overflow-x: auto;">
@@ -412,134 +259,49 @@
                             <tbody>${jadwalRows}</tbody>
                         </table>
                     </div>
-                    <p class="text-muted" style="margin-top: 0.8rem; font-size: 0.8rem; text-align: right;"><i class="fas fa-clock"></i> Jadwal berdasarkan data spreadsheet</p>
+                </section>
+
+                <section id="kajian">
+                    <h2 class="section-title">Kajian Rutin</h2>
+                    <div class="grid-3">${kajianHtml || '<div class="card">Belum ada data kajian</div>'}</div>
+                </section>
+
+                <section id="pengurus">
+                    <h2 class="section-title">Pengurus DKM</h2>
+                    <div class="grid-3">${pengurusHtml || '<div class="card">Data pengurus belum tersedia</div>'}</div>
+                </section>
+
+                <section id="keuangan">
+                    <h2 class="section-title">Laporan Keuangan</h2>
+                    ${keuanganHtml}
+                </section>
+
+                <section id="galeri">
+                    <h2 class="section-title">Galeri Kegiatan</h2>
+                    <div class="galeri-grid">${galeriHtml || '<div class="card">Belum ada galeri</div>'}</div>
+                </section>
+
+                <section id="sosmed">
+                    <h2 class="section-title">Ikuti Kami</h2>
+                    ${sosmedHtml}
                 </section>
             `;
 
-            // === KAJIAN ===
-            let kajianHtml = '';
-            if(kajianList.length) {
-                kajianList.forEach(k => {
-                    const icon = k.icon || 'fa-book';
-                    const link = k.link || '#';
-                    const deskripsi = k.deskripsi || '';
-                    kajianHtml += `
-                        <div class="card">
-                            <i class="fas ${icon}" style="font-size: 2rem; color: var(--secondary); margin-bottom: 0.8rem; display: inline-block;"></i>
-                            <h3>${k.judul || 'Kajian'}</h3>
-                            <p style="margin: 0.5rem 0;">${deskripsi}</p>
-                            <a href="${link}" target="_blank" class="btn-outline" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; margin-top:0.8rem;">Ikuti <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    `;
-                });
-            } else {
-                kajianHtml = '<div class="card">Belum ada data kajian</div>';
-            }
-            html += `<section id="kajian"><h2 class="section-title">Kajian Rutin</h2><div class="grid-3">${kajianHtml}</div></section>`;
-
-            // === PENGURUS ===
-            let pengurusHtml = '';
-            if(pengurusList.length) {
-                pengurusList.forEach(p => {
-                    const foto = p.foto_url && p.foto_url.trim() !== '' ? p.foto_url : 'https://via.placeholder.com/110?text=No+Image';
-                    pengurusHtml += `
-                        <div class="card pengurus-card">
-                            <img class="pengurus-img" src="${foto}" alt="${p.nama}" onerror="this.src='https://via.placeholder.com/110?text=User'">
-                            <div class="pengurus-name">${p.nama || '-'}</div>
-                            <div class="pengurus-jabatan">${p.jabatan || '-'}</div>
-                        </div>
-                    `;
-                });
-            } else {
-                pengurusHtml = '<div class="card">Data pengurus belum tersedia</div>';
-            }
-            html += `<section id="pengurus"><h2 class="section-title">Pengurus DKM</h2><div class="grid-3">${pengurusHtml}</div></section>`;
-
-            // === KEUANGAN ===
-            let keuanganHtml = '';
-            if(keuanganList.length) {
-                const keu = keuanganList[0];
-                const bulan = keu.bulan_tahun || 'Maret 2025';
-                const pemasukan = keu.pemasukan ? Number(keu.pemasukan).toLocaleString('id-ID') : '0';
-                const pengeluaran = keu.pengeluaran ? Number(keu.pengeluaran).toLocaleString('id-ID') : '0';
-                const saldo = keu.saldo ? Number(keu.saldo).toLocaleString('id-ID') : '0';
-                keuanganHtml = `
-                    <div class="card">
-                        <h3><i class="fas fa-chart-line"></i> Laporan Bulan ${bulan}</h3>
-                        <ul class="info-list" style="margin-top: 1rem;">
-                            <li><i class="fas fa-arrow-down"></i> <strong>Pemasukan:</strong> Rp ${pemasukan}</li>
-                            <li><i class="fas fa-arrow-up"></i> <strong>Pengeluaran:</strong> Rp ${pengeluaran}</li>
-                            <li><i class="fas fa-wallet"></i> <strong>Saldo Akhir:</strong> Rp ${saldo}</li>
-                        </ul>
-                    </div>
-                `;
-            } else {
-                keuanganHtml = '<div class="card">Data keuangan belum tersedia</div>';
-            }
-            html += `<section id="keuangan"><h2 class="section-title">Laporan Keuangan</h2>${keuanganHtml}</section>`;
-
-            // === GALERI ===
-            let galeriHtml = '';
-            if(galeriList.length) {
-                galeriList.sort((a,b) => (a.urutan || 0) - (b.urutan || 0));
-                galeriList.forEach(g => {
-                    const imgUrl = g.url_gambar || '';
-                    const judulGaleri = g.judul || 'Kegiatan Masjid';
-                    galeriHtml += `
-                        <div class="galeri-item">
-                            <img src="${imgUrl}" alt="${judulGaleri}" onerror="this.src='https://via.placeholder.com/400x200?text=Gambar+Masjid'">
-                            <div class="galeri-caption">${judulGaleri}</div>
-                        </div>
-                    `;
-                });
-            } else {
-                galeriHtml = '<div class="card">Belum ada galeri tersedia</div>';
-            }
-            html += `<section id="galeri"><h2 class="section-title">Galeri Kegiatan</h2><div class="galeri-grid">${galeriHtml}</div></section>`;
-
-            // === SOSIAL MEDIA ===
-            let sosmedHtml = '';
-            const platformIcons = {
-                facebook: 'fab fa-facebook',
-                instagram: 'fab fa-instagram',
-                youtube: 'fab fa-youtube',
-                twitter: 'fab fa-twitter',
-                tiktok: 'fab fa-tiktok'
-            };
-            if(sosialMediaList.length) {
-                let linksHtml = '';
-                sosialMediaList.forEach(sm => {
-                    const platform = sm.platform?.toLowerCase();
-                    const icon = platformIcons[platform] || 'fas fa-globe';
-                    const url = sm.url || '#';
-                    linksHtml += `<a href="${url}" target="_blank" rel="noopener"><i class="${icon}"></i></a>`;
-                });
-                sosmedHtml = `
-                    <div class="card" style="text-align: center;">
-                        <div class="social-links">${linksHtml}</div>
-                        <div class="info-list" style="max-width: 400px; margin: 0 auto;">
-                            <li><i class="fas fa-map-pin"></i> <strong>Alamat:</strong> ${alamat}</li>
-                            <li><i class="fab fa-whatsapp"></i> <strong>Donasi & Info:</strong> <a href="https://wa.me/${waNumber}" target="_blank" style="color: var(--primary);">${waNumber}</a></li>
-                        </div>
-                    </div>
-                `;
-            } else {
-                sosmedHtml = '<div class="card">Media sosial belum ditambahkan</div>';
-            }
-            html += `<section id="sosmed"><h2 class="section-title">Ikuti Kami</h2>${sosmedHtml}</section>`;
-
-            mainContainer.innerHTML = html;
-        } catch (error) {
-            console.error(error);
-            mainContainer.innerHTML = `<div class="error-msg"><i class="fas fa-exclamation-triangle"></i> Gagal memuat data dari Google Spreadsheet. Pastikan spreadsheet dipublikasikan (File → Bagikan → Publikasikan ke web).<br><br>Detail: ${error.message}</div>`;
-            // Tampilkan dummy fallback untuk hero agar tetap ada informasi
+            console.log('✅ Semua data berhasil dimuat dari spreadsheet');
+        } catch (err) {
+            console.error(err);
+            contentDiv.innerHTML = `
+                <div class="error-msg">
+                    <i class="fas fa-exclamation-triangle"></i> Gagal mengambil data dari Google Spreadsheet.<br><br>
+                    <strong>Penyebab umum:</strong> Spreadsheet belum dipublikasikan ke web.<br>
+                    <strong>Solusi:</strong> Buka file → File → Bagikan → Publikasikan ke web → Publikasikan.<br><br>
+                    Detail error: ${err.message}
+                </div>
+            `;
             document.getElementById('hero-title').innerText = 'Masjid An-Nur';
-            document.getElementById('hero-subtitle').innerText = 'Tersambung ke spreadsheet publik';
-            document.getElementById('hero-tagline').innerHTML = '<i class="fas fa-cloud-download-alt"></i> Periksa izin akses sheet';
+            document.getElementById('hero-subtitle').innerText = 'Periksa koneksi spreadsheet';
         }
-    }
-
-    renderWebsite();
+    });
 </script>
 </body>
 </html>
