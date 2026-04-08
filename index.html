@@ -2,46 +2,37 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Profil Masjid - Dinamis dari Google Sheet</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Masjid - Google Sheet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f8faf4; color: #1e2a2e; line-height: 1.5; scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background: #f8faf4; color: #1e2a2e; line-height: 1.5; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-        header { background: linear-gradient(135deg, #0f3b2c, #1e6f4c); color: white; padding: 20px 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        header { background: linear-gradient(135deg, #0f3b2c, #1e6f4c); color: white; padding: 20px 0; position: sticky; top: 0; z-index: 100; }
         .nav-container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-        .logo h1 { font-size: 1.6rem; font-weight: 700; }
-        .logo p { font-size: 0.8rem; opacity: 0.9; }
+        .logo h1 { font-size: 1.6rem; }
         .nav-links { display: flex; gap: 20px; flex-wrap: wrap; }
         .nav-links a { color: white; text-decoration: none; font-weight: 500; }
-        .nav-links a:hover { text-decoration: underline; }
-        .hero { background: linear-gradient(rgba(15,59,44,0.85), rgba(30,111,76,0.85)), var(--hero-bg, url('https://placehold.co/1600x600')) center/cover; padding: 80px 20px; text-align: center; color: white; }
+        .hero { padding: 80px 20px; text-align: center; color: white; background-size: cover; background-position: center; }
         .hero h2 { font-size: 2.8rem; margin-bottom: 16px; }
-        .hero p { font-size: 1.2rem; max-width: 700px; margin: 0 auto; }
         section { padding: 60px 0; border-bottom: 1px solid #e2e8e0; }
-        .section-title { font-size: 2rem; font-weight: 700; margin-bottom: 40px; text-align: center; color: #1e6f4c; position: relative; }
-        .section-title:after { content: ''; display: block; width: 70px; height: 4px; background: #f4c542; margin: 12px auto 0; border-radius: 4px; }
+        .section-title { font-size: 2rem; font-weight: 700; margin-bottom: 40px; text-align: center; color: #1e6f4c; }
+        .section-title:after { content: ''; display: block; width: 70px; height: 4px; background: #f4c542; margin: 12px auto 0; }
         .grid-2, .grid-3, .grid-4 { display: grid; gap: 30px; }
         .grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
         .grid-3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
         .grid-4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-        .card { background: white; border-radius: 24px; padding: 24px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); transition: transform 0.2s; }
-        .card:hover { transform: translateY(-5px); }
+        .card { background: white; border-radius: 24px; padding: 24px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
         .schedule-table { width: 100%; border-collapse: collapse; background: white; border-radius: 20px; overflow: hidden; }
         .schedule-table th, .schedule-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #e9ecef; }
         .schedule-table th { background-color: #1e6f4c; color: white; }
         .gallery-img { width: 100%; height: 180px; object-fit: cover; border-radius: 16px; margin-bottom: 8px; }
-        .pengurus-card { text-align: center; }
-        .pengurus-card img { width: 100px; height: 100px; object-fit: cover; border-radius: 50%; margin-bottom: 12px; border: 3px solid #f4c542; }
         .wa-link { background: #25D366; color: white; padding: 10px 20px; border-radius: 40px; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: bold; }
-        .map-container { border-radius: 24px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-        footer { background: #0f3b2c; color: #ccc; padding: 32px 0; text-align: center; }
-        .loading { text-align: center; padding: 50px; font-size: 1.2rem; }
-        .edit-btn { background: #f4c542; padding: 8px 16px; border-radius: 40px; text-decoration: none; color: #1e2a2e; display: inline-block; margin-top: 12px; }
-        .error-msg { background: #ffe0e0; color: #c00; padding: 16px; border-radius: 16px; margin: 20px; text-align: center; }
-        @media (max-width: 768px) { .hero h2 { font-size: 2rem; } .section-title { font-size: 1.6rem; } .nav-container { flex-direction: column; text-align: center; } }
+        .error-msg { background: #ffe0e0; color: #c00; padding: 20px; border-radius: 16px; margin: 20px; text-align: center; }
+        .loading { text-align: center; padding: 50px; }
+        @media (max-width: 768px) { .hero h2 { font-size: 2rem; } .nav-container { flex-direction: column; text-align: center; } }
     </style>
 </head>
 <body>
@@ -50,10 +41,10 @@
     <div class="container nav-container">
         <div class="logo">
             <h1 id="namaMasjidHeader"><i class="fas fa-mosque"></i> Memuat...</h1>
-            <p id="taglineHeader">Loading</p>
+            <p id="taglineHeader"></p>
         </div>
         <div class="nav-links">
-            <a href="#profil">Profil</a><a href="#jadwal">Jadwal</a><a href="#imam">Imam & Adzan</a>
+            <a href="#profil">Profil</a><a href="#jadwal">Jadwal</a><a href="#imam">Imam</a>
             <a href="#kajian">Kajian</a><a href="#galeri">Galeri</a><a href="#pengurus">Pengurus</a>
             <a href="#keuangan">Keuangan</a><a href="#lokasi">Lokasi</a>
         </div>
@@ -65,307 +56,246 @@
 </div>
 
 <main class="container" id="main-content">
-    <div class="loading">Mengambil data dari Google Sheet... <i class="fas fa-spinner fa-pulse"></i></div>
+    <div class="loading"><i class="fas fa-spinner fa-pulse"></i> Mengambil data dari Google Sheet...</div>
 </main>
 
-<footer>
-    <div class="container"><p id="footerText">© 2025 Masjid | Data dari Google Sheet</p></div>
+<footer style="background:#0f3b2c; color:#ccc; padding:32px 0; text-align:center;">
+    <div class="container"><p id="footerText"></p></div>
 </footer>
 
 <script>
-    const SPREADSHEET_ID = '1dKHiVnVhCBziOeAh_rabPfaaL8mpgtiPYmft2OxVGYQ';
+const SPREADSHEET_ID = '1dKHiVnVhCBziOeAh_rabPfaaL8mpgtiPYmft2OxVGYQ';
 
-    // Fungsi fetch CSV dengan parsing yang lebih handal (menggunakan Papa Parse? tidak, kita buat manual yang robust)
-    async function fetchSheet(sheetName) {
-        const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`HTTP ${response.status} untuk sheet ${sheetName}`);
-        const csvText = await response.text();
-        console.log(`Raw CSV untuk sheet ${sheetName}:`, csvText.substring(0, 500)); // log untuk debugging
-        
-        // Gunakan parser CSV yang benar (mengikuti RFC 4180)
-        const rows = [];
-        let currentRow = [];
-        let currentField = '';
-        let inQuotes = false;
-        let i = 0;
-        const len = csvText.length;
-        
-        while (i < len) {
-            const ch = csvText[i];
-            if (ch === '"') {
-                // Handle escaped quotes
-                if (inQuotes && csvText[i+1] === '"') {
-                    currentField += '"';
-                    i += 2;
-                    continue;
-                }
-                inQuotes = !inQuotes;
-                i++;
+// Parsing CSV yang handal (menerima kutipan dan newline)
+function parseCSV(csvText) {
+    const rows = [];
+    let currentRow = [];
+    let currentField = '';
+    let inQuotes = false;
+    let i = 0;
+    while (i < csvText.length) {
+        const ch = csvText[i];
+        if (ch === '"') {
+            if (inQuotes && csvText[i+1] === '"') {
+                currentField += '"';
+                i += 2;
                 continue;
             }
-            if (ch === ',' && !inQuotes) {
-                currentRow.push(currentField);
-                currentField = '';
-                i++;
-                continue;
-            }
-            if (ch === '\n' && !inQuotes) {
-                currentRow.push(currentField);
-                if (currentRow.length > 0 && currentRow.some(cell => cell !== '')) {
-                    rows.push(currentRow);
-                }
-                currentRow = [];
-                currentField = '';
-                i++;
-                continue;
-            }
-            if (ch === '\r' && !inQuotes) {
-                i++;
-                continue;
-            }
-            currentField += ch;
+            inQuotes = !inQuotes;
             i++;
+            continue;
         }
-        // Push last field/row
-        if (currentField !== '' || currentRow.length > 0) {
-            currentRow.push(currentField);
-            if (currentRow.length > 0 && currentRow.some(cell => cell !== '')) rows.push(currentRow);
+        if (ch === ',' && !inQuotes) {
+            currentRow.push(currentField.trim());
+            currentField = '';
+            i++;
+            continue;
         }
-        
-        if (rows.length === 0) return [];
-        const headers = rows[0].map(h => h.trim());
-        const data = [];
-        for (let r = 1; r < rows.length; r++) {
-            const obj = {};
-            headers.forEach((h, idx) => {
-                let val = rows[r][idx] || '';
-                // Hapus kutipan di awal/akhir jika ada (kadang masih tersisa)
-                if (val.startsWith('"') && val.endsWith('"')) val = val.slice(1, -1);
-                obj[h] = val;
-            });
-            data.push(obj);
+        if (ch === '\n' && !inQuotes) {
+            currentRow.push(currentField.trim());
+            if (currentRow.length > 0 && currentRow.some(cell => cell !== '')) {
+                rows.push(currentRow);
+            }
+            currentRow = [];
+            currentField = '';
+            i++;
+            continue;
         }
-        return data;
+        currentField += ch;
+        i++;
     }
-
-    async function fetchProfil() {
-        const data = await fetchSheet('profil');
-        console.log('Data mentah sheet profil:', data);
-        const profil = {};
-        data.forEach(row => {
-            let key = row.key ? row.key.trim() : '';
-            let value = row.value ? row.value.trim() : '';
-            if (key) profil[key] = value;
-        });
-        console.log('Profil object:', profil);
-        return profil;
+    if (currentField !== '' || currentRow.length > 0) {
+        currentRow.push(currentField.trim());
+        if (currentRow.length > 0 && currentRow.some(cell => cell !== '')) rows.push(currentRow);
     }
+    if (rows.length === 0) return [];
+    const headers = rows[0];
+    const data = [];
+    for (let r = 1; r < rows.length; r++) {
+        const obj = {};
+        headers.forEach((h, idx) => { obj[h] = rows[r][idx] || ''; });
+        data.push(obj);
+    }
+    return data;
+}
 
-    async function loadAllData() {
-        try {
-            // Ambil semua sheet secara paralel, tapi tangani error per sheet
-            let profil = {};
-            let jadwalSholat = [], jadwalImam = [], jadwalMuadzin = [], kajian = [], pengurus = [], keuangan = [], galeri = [], hero = [], sosialMedia = [];
-            
-            try {
-                profil = await fetchProfil();
-            } catch (e) {
-                console.error('Gagal fetch profil:', e);
-                // Tampilkan error di halaman
-                document.getElementById('main-content').innerHTML = `<div class="error-msg"><i class="fas fa-exclamation-triangle"></i> Gagal memuat data profil: ${e.message}<br>Pastikan sheet 'profil' sudah dipublikasikan ke web (File → Share → Publish to web) dan nama sheet benar.</div>`;
-                return;
-            }
-            
-            // Ambil sheet lain, jika gagal biarkan kosong
-            const otherSheets = [
-                {name: 'jadwal_sholat', var: 'jadwalSholat'},
-                {name: 'jadwal_imam', var: 'jadwalImam'},
-                {name: 'jadwal_muadzin', var: 'jadwalMuadzin'},
-                {name: 'kajian', var: 'kajian'},
-                {name: 'pengurus', var: 'pengurus'},
-                {name: 'keuangan', var: 'keuangan'},
-                {name: 'galeri', var: 'galeri'},
-                {name: 'hero', var: 'hero'},
-                {name: 'sosial_media', var: 'sosialMedia'}
-            ];
-            
-            for (const sheet of otherSheets) {
-                try {
-                    const data = await fetchSheet(sheet.name);
-                    window[sheet.var] = data;
-                } catch (e) {
-                    console.warn(`Sheet ${sheet.name} gagal:`, e);
-                    window[sheet.var] = [];
-                }
-            }
-            
-            // Assign ke variabel lokal
-            jadwalSholat = window.jadwalSholat || [];
-            jadwalImam = window.jadwalImam || [];
-            jadwalMuadzin = window.jadwalMuadzin || [];
-            kajian = window.kajian || [];
-            pengurus = window.pengurus || [];
-            keuangan = window.keuangan || [];
-            galeri = window.galeri || [];
-            hero = window.hero || [];
-            sosialMedia = window.sosialMedia || [];
+async function fetchSheet(sheetName) {
+    const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status} untuk sheet ${sheetName}`);
+    const csvText = await response.text();
+    const cleanText = csvText.replace(/^\uFEFF/, '');
+    return parseCSV(cleanText);
+}
 
-            const namaMasjid = profil.nama_masjid || 'Masjid An-Nur';
-            const tagline = profil.tagline || '';
-            document.getElementById('namaMasjidHeader').innerHTML = `<i class="fas fa-mosque"></i> ${escapeHtml(namaMasjid)}`;
-            document.getElementById('taglineHeader').innerText = escapeHtml(tagline);
-            document.getElementById('footerText').innerHTML = `© 2025 ${escapeHtml(namaMasjid)} | Data dari Google Sheet`;
+async function fetchProfil() {
+    const data = await fetchSheet('profil');
+    console.log('Data mentah profil:', data);
+    const profil = {};
+    // Pastikan data memiliki kolom 'key' dan 'value'
+    data.forEach(row => {
+        if (row.key && row.value !== undefined) {
+            profil[row.key.trim()] = row.value.trim();
+        } else if (row[Object.keys(row)[0]] && row[Object.keys(row)[1]]) {
+            // fallback jika header berbeda
+            const keys = Object.keys(row);
+            profil[row[keys[0]].trim()] = row[keys[1]].trim();
+        }
+    });
+    console.log('Profil setelah parsing:', profil);
+    return profil;
+}
 
-            const heroData = hero[0] || {};
-            document.getElementById('heroJudul').innerText = escapeHtml(heroData.judul || namaMasjid);
-            document.getElementById('heroSubjudul').innerText = escapeHtml(heroData.subjudul || tagline);
-            if (heroData.background_url) {
-                document.getElementById('hero-container').style.backgroundImage = `linear-gradient(rgba(15,59,44,0.85), rgba(30,111,76,0.85)), url('${escapeHtml(heroData.background_url)}')`;
-            }
+async function loadAllData() {
+    try {
+        const profil = await fetchProfil();
+        const jadwalSholat = await fetchSheet('jadwal_sholat');
+        const jadwalImam = await fetchSheet('jadwal_imam');
+        const jadwalMuadzin = await fetchSheet('jadwal_muadzin');
+        const kajian = await fetchSheet('kajian');
+        const pengurus = await fetchSheet('pengurus');
+        const keuangan = await fetchSheet('keuangan');
+        const galeri = await fetchSheet('galeri');
+        const hero = await fetchSheet('hero');
+        const sosialMedia = await fetchSheet('sosial_media');
 
-            const fasilitasRaw = profil.fasilitas || '';
-            const fasilitasList = fasilitasRaw.split(/\r?\n/).filter(f => f.trim() !== '');
-            const fasilitasHtml = fasilitasList.length ? `<ul>${fasilitasList.map(f => `<li>${escapeHtml(f)}</li>`).join('')}</ul>` : '<p>-</p>';
+        // Update header
+        const namaMasjid = profil.nama_masjid || 'Masjid An-Nur';
+        const tagline = profil.tagline || '';
+        document.getElementById('namaMasjidHeader').innerHTML = `<i class="fas fa-mosque"></i> ${escapeHtml(namaMasjid)}`;
+        document.getElementById('taglineHeader').innerText = escapeHtml(tagline);
+        document.getElementById('footerText').innerHTML = `© 2025 ${escapeHtml(namaMasjid)} | Data dari Google Sheet`;
 
-            let waNumber = (profil.wa_number || '').replace(/[^0-9]/g, '');
-            if (waNumber.startsWith('0')) waNumber = '62' + waNumber.substring(1);
-            const waLink = waNumber ? `https://wa.me/${waNumber}` : '#';
+        // Hero
+        const heroData = hero[0] || {};
+        document.getElementById('heroJudul').innerText = escapeHtml(heroData.judul || namaMasjid);
+        document.getElementById('heroSubjudul').innerText = escapeHtml(heroData.subjudul || tagline);
+        if (heroData.background_url) {
+            document.getElementById('hero-container').style.backgroundImage = `linear-gradient(rgba(15,59,44,0.85), rgba(30,111,76,0.85)), url('${escapeHtml(heroData.background_url)}')`;
+        }
 
-            let html = `
-                <section id="profil">
-                    <h3 class="section-title">Profil Masjid</h3>
-                    <div class="grid-2">
-                        <div class="card">
-                            <i class="fas fa-history fa-2x" style="color:#1e6f4c;"></i>
-                            <h3 style="margin:12px 0">Tahun Berdiri</h3>
-                            <p>${escapeHtml(profil.tahun_berdiri || '-')}</p>
-                            <h3 style="margin:20px 0 8px">Visi</h3>
-                            <p>${escapeHtml(profil.visi || '').replace(/\n/g, '<br>')}</p>
-                            <h3 style="margin:20px 0 8px">Misi</h3>
-                            <p>${escapeHtml(profil.misi || '').replace(/\n/g, '<br>')}</p>
-                        </div>
-                        <div class="card">
-                            <i class="fas fa-building fa-2x" style="color:#1e6f4c;"></i>
-                            <h3 style="margin:12px 0">Fasilitas</h3>
-                            ${fasilitasHtml}
-                        </div>
-                    </div>
-                </section>
+        // Fasilitas
+        const fasilitasRaw = profil.fasilitas || '';
+        const fasilitasList = fasilitasRaw.split(/\r?\n/).filter(f => f.trim());
+        const fasilitasHtml = fasilitasList.length ? `<ul>${fasilitasList.map(f => `<li>${escapeHtml(f)}</li>`).join('')}</ul>` : '<p>-</p>';
 
-                <section id="jadwal">
-                    <h3 class="section-title">Jadwal Sholat Harian</h3>
+        // WhatsApp
+        let waNumber = (profil.wa_number || '').replace(/[^0-9]/g, '');
+        if (waNumber.startsWith('0')) waNumber = '62' + waNumber.substring(1);
+        const waLink = waNumber ? `https://wa.me/${waNumber}` : '#';
+
+        // Build HTML
+        const html = `
+            <section id="profil">
+                <h3 class="section-title">Profil Masjid</h3>
+                <div class="grid-2">
                     <div class="card">
-                        <table class="schedule-table">
-                            <thead><tr><th>Sholat</th><th>Waktu</th></tr></thead>
-                            <tbody>
-                                ${jadwalSholat.map(row => `<tr><td>${escapeHtml(row.sholat)}</td><td>${escapeHtml(row.waktu)}</td>`).join('')}
-                            </tbody>
-                        </table>
+                        <i class="fas fa-history fa-2x" style="color:#1e6f4c;"></i>
+                        <h3>Tahun Berdiri</h3>
+                        <p>${escapeHtml(profil.tahun_berdiri || '-')}</p>
+                        <h3>Visi</h3>
+                        <p>${escapeHtml(profil.visi || '').replace(/\n/g, '<br>')}</p>
+                        <h3>Misi</h3>
+                        <p>${escapeHtml(profil.misi || '').replace(/\n/g, '<br>')}</p>
                     </div>
-                </section>
-
-                <section id="imam">
-                    <h3 class="section-title">Jadwal Imam & Muadzin</h3>
-                    <div class="grid-2">
-                        <div class="card">
-                            <i class="fas fa-user-check fa-2x"></i><h3>Imam Shalat Wajib</h3>
-                            <ul>${jadwalImam.map(i => `<li><strong>${escapeHtml(i.sholat)}</strong> : ${escapeHtml(i.nama_imam)}</li>`).join('')}</ul>
-                        </div>
-                        <div class="card">
-                            <i class="fas fa-microphone-alt fa-2x"></i><h3>Muadzin</h3>
-                            <ul>${jadwalMuadzin.map(m => `<li><strong>${escapeHtml(m.sholat)}</strong> : ${escapeHtml(m.nama_muadzin)}</li>`).join('')}</ul>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="kajian">
-                    <h3 class="section-title">Kajian Rutin</h3>
-                    <div class="grid-3">
-                        ${kajian.map(k => `
-                            <div class="card">
-                                <i class="fas ${k.icon || 'fa-calendar-alt'} fa-2x"></i>
-                                <h3>${escapeHtml(k.judul)}</h3>
-                                <p>${escapeHtml(k.deskripsi)}</p>
-                                <a href="${escapeHtml(k.link)}" target="_blank" class="edit-btn">Detail →</a>
-                            </div>
-                        `).join('')}
-                    </div>
-                </section>
-
-                <section id="galeri">
-                    <h3 class="section-title">Galeri Kegiatan</h3>
-                    <div class="grid-4">
-                        ${galeri.sort((a,b)=> (a.urutan||0) - (b.urutan||0)).map(g => `
-                            <div><img src="${escapeHtml(g.url_gambar)}" class="gallery-img" alt="${escapeHtml(g.judul)}" loading="lazy"><p>${escapeHtml(g.judul)}</p></div>
-                        `).join('')}
-                    </div>
-                </section>
-
-                <section id="pengurus">
-                    <h3 class="section-title">Struktur Pengurus</h3>
-                    <div class="grid-3">
-                        ${pengurus.map(p => `
-                            <div class="card pengurus-card">
-                                ${p.foto_url ? `<img src="${escapeHtml(p.foto_url)}" alt="${escapeHtml(p.nama)}">` : `<i class="fas fa-user-circle fa-3x"></i>`}
-                                <h3>${escapeHtml(p.jabatan)}</h3>
-                                <p>${escapeHtml(p.nama)}</p>
-                            </div>
-                        `).join('')}
-                    </div>
-                </section>
-
-                <section id="keuangan">
-                    <h3 class="section-title">Laporan Keuangan</h3>
                     <div class="card">
-                        ${keuangan.map(k => `
-                            <div style="margin-bottom:8px;"><strong>Periode: ${escapeHtml(k.bulan_tahun)}</strong></div>
-                            <div style="display:flex; justify-content:space-between;"><span>Pemasukan</span><span>Rp ${parseInt(k.pemasukan).toLocaleString()}</span></div>
-                            <div style="display:flex; justify-content:space-between;"><span>Pengeluaran</span><span>Rp ${parseInt(k.pengeluaran).toLocaleString()}</span></div>
-                            <div style="display:flex; justify-content:space-between; font-weight:bold; margin-top:8px;"><span>Saldo</span><span>Rp ${parseInt(k.saldo).toLocaleString()}</span></div>
-                        `).join('')}
+                        <i class="fas fa-building fa-2x" style="color:#1e6f4c;"></i>
+                        <h3>Fasilitas</h3>
+                        ${fasilitasHtml}
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <section id="lokasi">
-                    <h3 class="section-title">Lokasi & Kontak</h3>
-                    <div class="grid-2">
-                        <div class="map-container">
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.712359129087!2d107.618889!3d-6.917222!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e7a3e5b5b3b3%3A0x5e5e5e5e5e5e5e5e!2sMasjid%20Raya!5e0!3m2!1sid!2sid!4v1680000000000!5m2!1sid!2sid" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                        </div>
-                        <div class="card">
-                            <i class="fas fa-phone-alt fa-2x"></i>
-                            <h3>Hubungi Kami</h3>
-                            ${waNumber ? `<p><i class="fab fa-whatsapp"></i> WhatsApp: <a href="${waLink}" target="_blank" class="wa-link" style="display:inline-flex; margin-top:8px;">Chat Marbot</a></p>` : '<p>Nomor WA belum diisi</p>'}
-                            <p><i class="fas fa-envelope"></i> Email: ${escapeHtml(profil.email || '-')}</p>
-                            <p><i class="fas fa-map-marker-alt"></i> ${escapeHtml(profil.alamat || 'Alamat belum diisi')}</p>
-                            <div style="margin-top:16px;">
-                                ${sosialMedia.map(sm => `<a href="${escapeHtml(sm.url)}" target="_blank" style="margin-right:16px; font-size:1.8rem; color:#1e6f4c;"><i class="fab fa-${sm.platform}"></i></a>`).join('')}
-                            </div>
-                        </div>
+            <section id="jadwal">
+                <h3 class="section-title">Jadwal Sholat</h3>
+                <div class="card">
+                    <table class="schedule-table">
+                        <thead><tr><th>Sholat</th><th>Waktu</th></tr></thead>
+                        <tbody>${jadwalSholat.map(row => `<tr><td>${escapeHtml(row.sholat)}</td><td>${escapeHtml(row.waktu)}</td></tr>`).join('')}</tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="imam">
+                <h3 class="section-title">Imam & Muadzin</h3>
+                <div class="grid-2">
+                    <div class="card"><h3>Imam</h3><ul>${jadwalImam.map(i => `<li><strong>${escapeHtml(i.sholat)}</strong> : ${escapeHtml(i.nama_imam)}</li>`).join('')}</ul></div>
+                    <div class="card"><h3>Muadzin</h3><ul>${jadwalMuadzin.map(m => `<li><strong>${escapeHtml(m.sholat)}</strong> : ${escapeHtml(m.nama_muadzin)}</li>`).join('')}</ul></div>
+                </div>
+            </section>
+
+            <section id="kajian">
+                <h3 class="section-title">Kajian Rutin</h3>
+                <div class="grid-3">${kajian.map(k => `
+                    <div class="card">
+                        <i class="fas ${k.icon || 'fa-calendar-alt'} fa-2x"></i>
+                        <h3>${escapeHtml(k.judul)}</h3>
+                        <p>${escapeHtml(k.deskripsi)}</p>
+                        <a href="${escapeHtml(k.link)}" target="_blank" style="background:#f4c542; padding:8px 16px; border-radius:40px; text-decoration:none; display:inline-block; margin-top:12px;">Detail →</a>
+                    </div>`).join('')}
+                </div>
+            </section>
+
+            <section id="galeri">
+                <h3 class="section-title">Galeri</h3>
+                <div class="grid-4">${galeri.map(g => `
+                    <div><img src="${escapeHtml(g.url_gambar)}" class="gallery-img" loading="lazy"><p>${escapeHtml(g.judul)}</p></div>`).join('')}
+                </div>
+            </section>
+
+            <section id="pengurus">
+                <h3 class="section-title">Pengurus</h3>
+                <div class="grid-3">${pengurus.map(p => `
+                    <div class="card" style="text-align:center">
+                        ${p.foto_url ? `<img src="${escapeHtml(p.foto_url)}" style="width:100px;height:100px;border-radius:50%;object-fit:cover;">` : '<i class="fas fa-user-circle fa-3x"></i>'}
+                        <h3>${escapeHtml(p.jabatan)}</h3>
+                        <p>${escapeHtml(p.nama)}</p>
+                    </div>`).join('')}
+                </div>
+            </section>
+
+            <section id="keuangan">
+                <h3 class="section-title">Keuangan</h3>
+                <div class="card">${keuangan.map(k => `
+                    <div><strong>${escapeHtml(k.bulan_tahun)}</strong></div>
+                    <div>Pemasukan: Rp ${parseInt(k.pemasukan).toLocaleString()}</div>
+                    <div>Pengeluaran: Rp ${parseInt(k.pengeluaran).toLocaleString()}</div>
+                    <div><strong>Saldo: Rp ${parseInt(k.saldo).toLocaleString()}</strong></div>
+                `).join('')}</div>
+            </section>
+
+            <section id="lokasi">
+                <h3 class="section-title">Lokasi & Kontak</h3>
+                <div class="grid-2">
+                    <div><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.712359129087!2d107.618889!3d-6.917222!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e7a3e5b5b3b3%3A0x5e5e5e5e5e5e5e5e!2sMasjid%20Raya!5e0!3m2!1sid!2sid!4v1680000000000!5m2!1sid!2sid" width="100%" height="300" style="border:0;" allowfullscreen></iframe></div>
+                    <div class="card">
+                        <h3>Hubungi Kami</h3>
+                        ${waNumber ? `<p><i class="fab fa-whatsapp"></i> <a href="${waLink}" target="_blank" class="wa-link">Chat Marbot</a></p>` : ''}
+                        <p><i class="fas fa-envelope"></i> ${escapeHtml(profil.email || '-')}</p>
+                        <p><i class="fas fa-map-marker-alt"></i> ${escapeHtml(profil.alamat || 'Alamat belum diisi')}</p>
+                        <div>${sosialMedia.map(sm => `<a href="${escapeHtml(sm.url)}" target="_blank" style="margin-right:16px; font-size:1.8rem; color:#1e6f4c;"><i class="fab fa-${sm.platform}"></i></a>`).join('')}</div>
                     </div>
-                </section>
-            `;
-            document.getElementById('main-content').innerHTML = html;
-        } catch (error) {
-            console.error('Error utama:', error);
-            document.getElementById('main-content').innerHTML = `<div class="error-msg"><i class="fas fa-exclamation-triangle"></i> Terjadi kesalahan: ${error.message}<br>Periksa console browser untuk detail.</div>`;
-        }
+                </div>
+            </section>
+        `;
+        document.getElementById('main-content').innerHTML = html;
+    } catch (err) {
+        console.error(err);
+        document.getElementById('main-content').innerHTML = `<div class="error-msg"><i class="fas fa-exclamation-triangle"></i> Gagal memuat data: ${err.message}<br><br>Pastikan semua sheet sudah dipublikasikan ke web (File → Share → Publish to web → pilih sheet → CSV).</div>`;
     }
+}
 
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-            return c;
-        });
-    }
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
 
-    loadAllData();
+loadAllData();
 </script>
 </body>
 </html>
