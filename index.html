@@ -75,16 +75,26 @@
 <script>
     const SPREADSHEET_ID = '1dKHiVnVhCBziOeAh_rabPfaaL8mpgtiPYmft2OxVGYQ';
 
-    // Parse CSV yang robust (support kutipan dan newline)
-    function parseCSV(csvText) {
+    // Fungsi fetch CSV dengan parsing yang lebih handal (menggunakan Papa Parse? tidak, kita buat manual yang robust)
+    async function fetchSheet(sheetName) {
+        const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP ${response.status} untuk sheet ${sheetName}`);
+        const csvText = await response.text();
+        console.log(`Raw CSV untuk sheet ${sheetName}:`, csvText.substring(0, 500)); // log untuk debugging
+        
+        // Gunakan parser CSV yang benar (mengikuti RFC 4180)
         const rows = [];
         let currentRow = [];
         let currentField = '';
         let inQuotes = false;
         let i = 0;
-        while (i < csvText.length) {
+        const len = csvText.length;
+        
+        while (i < len) {
             const ch = csvText[i];
             if (ch === '"') {
+                // Handle escaped quotes
                 if (inQuotes && csvText[i+1] === '"') {
                     currentField += '"';
                     i += 2;
@@ -95,13 +105,13 @@
                 continue;
             }
             if (ch === ',' && !inQuotes) {
-                currentRow.push(currentField.trim());
+                currentRow.push(currentField);
                 currentField = '';
                 i++;
                 continue;
             }
             if (ch === '\n' && !inQuotes) {
-                currentRow.push(currentField.trim());
+                currentRow.push(currentField);
                 if (currentRow.length > 0 && currentRow.some(cell => cell !== '')) {
                     rows.push(currentRow);
                 }
@@ -110,59 +120,96 @@
                 i++;
                 continue;
             }
+            if (ch === '\r' && !inQuotes) {
+                i++;
+                continue;
+            }
             currentField += ch;
             i++;
         }
+        // Push last field/row
         if (currentField !== '' || currentRow.length > 0) {
-            currentRow.push(currentField.trim());
+            currentRow.push(currentField);
             if (currentRow.length > 0 && currentRow.some(cell => cell !== '')) rows.push(currentRow);
         }
+        
         if (rows.length === 0) return [];
-        const headers = rows[0];
+        const headers = rows[0].map(h => h.trim());
         const data = [];
         for (let r = 1; r < rows.length; r++) {
             const obj = {};
-            headers.forEach((h, idx) => { obj[h] = rows[r][idx] || ''; });
+            headers.forEach((h, idx) => {
+                let val = rows[r][idx] || '';
+                // Hapus kutipan di awal/akhir jika ada (kadang masih tersisa)
+                if (val.startsWith('"') && val.endsWith('"')) val = val.slice(1, -1);
+                obj[h] = val;
+            });
             data.push(obj);
         }
         return data;
     }
 
-    async function fetchSheet(sheetName) {
-        const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`HTTP ${response.status} untuk sheet ${sheetName}`);
-        const csvText = await response.text();
-        const cleanText = csvText.replace(/^\uFEFF/, '');
-        return parseCSV(cleanText);
-    }
-
     async function fetchProfil() {
         const data = await fetchSheet('profil');
+        console.log('Data mentah sheet profil:', data);
         const profil = {};
-        data.forEach(row => { 
-            const key = row.key ? row.key.trim() : '';
-            const value = row.value ? row.value.trim() : '';
+        data.forEach(row => {
+            let key = row.key ? row.key.trim() : '';
+            let value = row.value ? row.value.trim() : '';
             if (key) profil[key] = value;
         });
-        console.log('Profil loaded:', profil);
+        console.log('Profil object:', profil);
         return profil;
     }
 
     async function loadAllData() {
         try {
-            const [profil, jadwalSholat, jadwalImam, jadwalMuadzin, kajian, pengurus, keuangan, galeri, hero, sosialMedia] = await Promise.all([
-                fetchProfil(),
-                fetchSheet('jadwal_sholat'),
-                fetchSheet('jadwal_imam'),
-                fetchSheet('jadwal_muadzin'),
-                fetchSheet('kajian'),
-                fetchSheet('pengurus'),
-                fetchSheet('keuangan'),
-                fetchSheet('galeri'),
-                fetchSheet('hero'),
-                fetchSheet('sosial_media')
-            ]);
+            // Ambil semua sheet secara paralel, tapi tangani error per sheet
+            let profil = {};
+            let jadwalSholat = [], jadwalImam = [], jadwalMuadzin = [], kajian = [], pengurus = [], keuangan = [], galeri = [], hero = [], sosialMedia = [];
+            
+            try {
+                profil = await fetchProfil();
+            } catch (e) {
+                console.error('Gagal fetch profil:', e);
+                // Tampilkan error di halaman
+                document.getElementById('main-content').innerHTML = `<div class="error-msg"><i class="fas fa-exclamation-triangle"></i> Gagal memuat data profil: ${e.message}<br>Pastikan sheet 'profil' sudah dipublikasikan ke web (File → Share → Publish to web) dan nama sheet benar.</div>`;
+                return;
+            }
+            
+            // Ambil sheet lain, jika gagal biarkan kosong
+            const otherSheets = [
+                {name: 'jadwal_sholat', var: 'jadwalSholat'},
+                {name: 'jadwal_imam', var: 'jadwalImam'},
+                {name: 'jadwal_muadzin', var: 'jadwalMuadzin'},
+                {name: 'kajian', var: 'kajian'},
+                {name: 'pengurus', var: 'pengurus'},
+                {name: 'keuangan', var: 'keuangan'},
+                {name: 'galeri', var: 'galeri'},
+                {name: 'hero', var: 'hero'},
+                {name: 'sosial_media', var: 'sosialMedia'}
+            ];
+            
+            for (const sheet of otherSheets) {
+                try {
+                    const data = await fetchSheet(sheet.name);
+                    window[sheet.var] = data;
+                } catch (e) {
+                    console.warn(`Sheet ${sheet.name} gagal:`, e);
+                    window[sheet.var] = [];
+                }
+            }
+            
+            // Assign ke variabel lokal
+            jadwalSholat = window.jadwalSholat || [];
+            jadwalImam = window.jadwalImam || [];
+            jadwalMuadzin = window.jadwalMuadzin || [];
+            kajian = window.kajian || [];
+            pengurus = window.pengurus || [];
+            keuangan = window.keuangan || [];
+            galeri = window.galeri || [];
+            hero = window.hero || [];
+            sosialMedia = window.sosialMedia || [];
 
             const namaMasjid = profil.nama_masjid || 'Masjid An-Nur';
             const tagline = profil.tagline || '';
@@ -301,12 +348,8 @@
             `;
             document.getElementById('main-content').innerHTML = html;
         } catch (error) {
-            console.error(error);
-            let errorMsg = error.message;
-            if (error.message.includes('Failed to fetch')) {
-                errorMsg = 'Gagal mengambil data. Pastikan sheet sudah dipublikasikan ke web (File → Share → Publish to web). Periksa juga koneksi internet.';
-            }
-            document.getElementById('main-content').innerHTML = `<div class="error-msg"><i class="fas fa-exclamation-triangle"></i> ${errorMsg}<br><br>Detail: ${error}</div>`;
+            console.error('Error utama:', error);
+            document.getElementById('main-content').innerHTML = `<div class="error-msg"><i class="fas fa-exclamation-triangle"></i> Terjadi kesalahan: ${error.message}<br>Periksa console browser untuk detail.</div>`;
         }
     }
 
@@ -317,6 +360,8 @@
             if (m === '<') return '&lt;';
             if (m === '>') return '&gt;';
             return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
         });
     }
 
