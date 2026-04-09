@@ -1,153 +1,390 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil Masjid - Dinamis</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .hero-gradient { background: linear-gradient(135deg, #065f46 0%, #064e3b 100%); }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Landing page dinamis Masjid Nur - data langsung dari Google Sheet">
+  <title id="page-title">Memuat data masjid...</title>
+  <!-- Tailwind CSS + Font Awesome + Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Amiri:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+    }
+    .arabic-font {
+      font-family: 'Amiri', serif;
+    }
+    .bg-masjid-pattern {
+      background-image: radial-gradient(circle at 10% 20%, rgba(255,255,240,0.03) 2%, transparent 2.5%);
+      background-size: 28px 28px;
+    }
+    .hero-gradient {
+      background: linear-gradient(135deg, #0a2e38 0%, #0b4f3c 100%);
+    }
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.2);
+    }
+    .gold-text {
+      color: #eab308;
+    }
+    .border-gold {
+      border-color: #eab308;
+    }
+    .loading-spinner {
+      border: 3px solid rgba(0,0,0,0.1);
+      border-radius: 50%;
+      border-top: 3px solid #eab308;
+      width: 48px;
+      height: 48px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .fade-in {
+      animation: fadeIn 0.6s ease-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fasilitas-item {
+      position: relative;
+      padding-left: 1.5rem;
+    }
+    .fasilitas-item:before {
+      content: "•";
+      color: #eab308;
+      font-weight: bold;
+      font-size: 1.2rem;
+      position: absolute;
+      left: 0;
+      top: -1px;
+    }
+  </style>
 </head>
-<body class="bg-gray-50 text-gray-900">
+<body class="bg-gray-50 text-gray-800">
 
-    <div id="loader" class="fixed inset-0 bg-white z-[100] flex items-center justify-center transition-opacity duration-500">
-        <div class="text-center">
-            <div class="inline-block w-12 h-12 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
-            <p class="mt-4 text-emerald-800 font-semibold tracking-wide">Menghubungkan ke Google Sheets...</p>
-        </div>
-    </div>
+  <!-- Loading Overlay -->
+  <div id="loading-screen" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center transition-opacity duration-500">
+    <div class="loading-spinner mb-5"></div>
+    <p class="text-gray-600 font-medium">Mengambil data dari Google Sheet...</p>
+    <p class="text-sm text-gray-400 mt-2">Masjid Nur | Rahmatan Lil 'Alamin</p>
+  </div>
 
-    <header class="hero-gradient text-white pb-32 pt-20 px-6">
-        <div class="max-w-5xl mx-auto text-center">
-            <span class="inline-block px-4 py-1 bg-emerald-500/30 rounded-full text-sm font-semibold mb-4 backdrop-blur-sm">Profil Resmi</span>
-            <h1 id="nama_masjid" class="text-5xl md:text-6xl font-extrabold mb-4 tracking-tight"></h1>
-            <p id="tagline" class="text-xl md:text-2xl text-emerald-100 font-light italic"></p>
+  <!-- Main Content (hidden until data loaded) -->
+  <div id="main-content" class="hidden opacity-0 transition-opacity duration-500">
+    <!-- Hero Section -->
+    <header class="hero-gradient text-white relative overflow-hidden shadow-lg">
+      <div class="absolute inset-0 bg-masjid-pattern opacity-30"></div>
+      <div class="container mx-auto px-6 py-12 md:py-20 relative z-10 text-center md:text-left">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+          <div class="max-w-2xl fade-in">
+            <div class="inline-block bg-white/20 backdrop-blur-sm rounded-full px-4 py-1 text-sm font-semibold mb-4 tracking-wide">
+              <i class="fas fa-mosque mr-2"></i> <span id="hero-badge">Masjid Jami'</span>
+            </div>
+            <h1 id="hero-nama" class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight arabic-font tracking-wide">Memuat...</h1>
+            <p id="hero-tagline" class="text-xl md:text-2xl text-emerald-100 italic mt-3 border-l-4 border-gold-text pl-4">Rahmatan Lil 'Alamin</p>
+            <div class="mt-6 flex flex-wrap gap-4 justify-center md:justify-start">
+              <a href="#profil-section" class="bg-gold-text hover:bg-amber-500 text-gray-900 font-semibold px-6 py-2 rounded-full transition shadow-md flex items-center gap-2"><i class="fas fa-landmark"></i> Profil Lengkap</a>
+              <a href="#" id="wa-hero-btn" target="_blank" class="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-full px-6 py-2 transition flex items-center gap-2"><i class="fab fa-whatsapp"></i> Hubungi Kami</a>
+            </div>
+          </div>
+          <div class="hidden md:block w-32 h-32 bg-gold-text/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+            <i class="fas fa-moon text-6xl text-amber-300"></i>
+          </div>
         </div>
+      </div>
+      <div class="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-gray-50 to-transparent"></div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-6 -mt-20">
-        <div class="grid lg:grid-cols-3 gap-8">
-            
-            <div class="lg:col-span-2 space-y-8">
-                <section class="bg-white p-8 md:p-10 rounded-3xl shadow-xl shadow-gray-200/50">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center text-xl">
-                            <i class="fas fa-eye"></i>
-                        </div>
-                        <h2 class="text-2xl font-bold text-gray-800 uppercase tracking-wide">Visi</h2>
-                    </div>
-                    <p id="visi" class="text-xl leading-relaxed text-gray-600 italic border-l-4 border-emerald-500 pl-6"></p>
-                </section>
-
-                <section class="bg-white p-8 md:p-10 rounded-3xl shadow-xl shadow-gray-200/50">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center text-xl">
-                            <i class="fas fa-bullseye"></i>
-                        </div>
-                        <h2 class="text-2xl font-bold text-gray-800 uppercase tracking-wide">Misi</h2>
-                    </div>
-                    <div id="misi" class="text-lg leading-loose text-gray-600 whitespace-pre-line space-y-2"></div>
-                </section>
+    <main class="container mx-auto px-6 py-12 md:py-16" id="profil-section">
+      <div class="space-y-12 fade-in">
+        <!-- Visi & Misi -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 card-hover border-b-4 border-gold-text">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="bg-emerald-100 p-3 rounded-full"><i class="fas fa-eye text-emerald-700 text-xl"></i></div>
+              <h2 class="text-2xl font-bold text-gray-800">Visi</h2>
             </div>
-
-            <div class="space-y-8">
-                <div class="bg-gray-900 text-white p-8 rounded-3xl shadow-2xl">
-                    <h3 class="text-xl font-bold mb-6 border-b border-gray-700 pb-4">Kontak & Lokasi</h3>
-                    <div class="space-y-6">
-                        <div class="flex items-start gap-4">
-                            <i class="fas fa-map-marker-alt mt-1 text-emerald-400"></i>
-                            <div>
-                                <p class="text-xs text-gray-400 uppercase">Alamat</p>
-                                <p id="alamat" class="text-sm leading-relaxed"></p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-4">
-                            <i class="fas fa-calendar-alt mt-1 text-emerald-400"></i>
-                            <div>
-                                <p class="text-xs text-gray-400 uppercase">Tahun Berdiri</p>
-                                <p id="tahun_berdiri" class="text-sm"></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-8 pt-6 border-t border-gray-700 flex gap-4">
-                        <a id="wa_btn" href="#" target="_blank" class="flex-1 bg-emerald-600 hover:bg-emerald-500 py-3 rounded-xl text-center transition font-bold">
-                            <i class="fab fa-whatsapp mr-2"></i> WhatsApp
-                        </a>
-                    </div>
-                </div>
-
-                <div class="bg-emerald-50 p-8 rounded-3xl border border-emerald-100">
-                    <h3 class="text-emerald-900 font-bold mb-4 flex items-center">
-                        <i class="fas fa-mosque mr-2"></i> Fasilitas Utama
-                    </h3>
-                    <div id="fasilitas" class="text-emerald-800/80 italic leading-relaxed whitespace-pre-line text-sm bg-white/50 p-4 rounded-xl"></div>
-                </div>
+            <p id="visi-text" class="text-gray-700 leading-relaxed text-lg italic">Memuat...</p>
+          </div>
+          <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 card-hover border-b-4 border-gold-text">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="bg-emerald-100 p-3 rounded-full"><i class="fas fa-bullhorn text-emerald-700 text-xl"></i></div>
+              <h2 class="text-2xl font-bold text-gray-800">Misi</h2>
             </div>
+            <div id="misi-list" class="space-y-2 text-gray-700"></div>
+          </div>
         </div>
+
+        <!-- Fasilitas & Info Tahun -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div class="lg:col-span-2 bg-white rounded-2xl shadow-lg overflow-hidden card-hover">
+            <div class="bg-emerald-800 px-6 py-4">
+              <div class="flex items-center gap-2 text-white"><i class="fas fa-building text-xl"></i><h2 class="text-xl font-bold">Fasilitas Unggulan</h2></div>
+            </div>
+            <div class="p-6">
+              <div id="fasilitas-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+            </div>
+          </div>
+          <div class="bg-gradient-to-br from-emerald-50 to-white rounded-2xl shadow-lg p-6 card-hover">
+            <div class="flex items-center gap-2 text-emerald-800 border-b border-emerald-200 pb-3 mb-4">
+              <i class="fas fa-calendar-alt text-xl"></i><h2 class="text-xl font-bold">Tahun Berdiri</h2>
+            </div>
+            <p id="tahun-berdiri" class="text-3xl font-bold text-emerald-700 mb-2">--</p>
+            <p class="text-sm text-gray-500">Berkiprah sejak puluhan tahun sebagai pusat ibadah dan pemberdayaan umat.</p>
+            <div class="mt-5 pt-3 border-t border-emerald-100">
+              <div class="flex items-center gap-2 text-gray-600"><i class="fas fa-hands-helping text-emerald-600"></i><span class="text-sm">Rahmatan lil 'alamin</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alamat & Kontak -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="bg-white rounded-2xl shadow-lg p-6 card-hover">
+            <div class="flex items-center gap-3 mb-5"><div class="bg-red-100 p-2 rounded-full"><i class="fas fa-map-marker-alt text-red-600 text-xl"></i></div><h2 class="text-2xl font-bold text-gray-800">Lokasi</h2></div>
+            <p id="alamat-text" class="text-gray-700 leading-relaxed mb-4">Memuat alamat...</p>
+            <a id="maps-link" href="#" target="_blank" class="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-5 py-2 rounded-full transition text-emerald-700 font-medium text-sm"><i class="fab fa-google"></i> Buka di Google Maps</a>
+          </div>
+          <div class="bg-white rounded-2xl shadow-lg p-6 card-hover">
+            <div class="flex items-center gap-3 mb-5"><div class="bg-green-100 p-2 rounded-full"><i class="fas fa-phone-alt text-green-700 text-xl"></i></div><h2 class="text-2xl font-bold text-gray-800">Kontak & Informasi</h2></div>
+            <div class="space-y-4">
+              <div class="flex items-center gap-4 flex-wrap"><i class="fab fa-whatsapp text-2xl text-green-600"></i><div><p class="text-sm text-gray-500">WhatsApp</p><a id="wa-number-link" href="#" target="_blank" class="font-semibold text-gray-800 hover:text-green-600 transition">--</a></div></div>
+              <div class="flex items-center gap-4 flex-wrap"><i class="fas fa-envelope text-2xl text-amber-600"></i><div><p class="text-sm text-gray-500">Email</p><a id="email-link" href="#" class="font-semibold text-gray-800 hover:text-emerald-600 transition">--</a></div></div>
+              <div class="pt-3 mt-2 border-t border-gray-100"><div class="flex items-center gap-2 text-gray-500 text-sm"><i class="fas fa-clock"></i><span>Kajian rutin & kegiatan jamaah terbuka untuk umum</span></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center pt-8 border-t border-gray-200 mt-4">
+          <p class="text-gray-500 text-sm italic">"Sebaik-baik manusia adalah yang bermanfaat bagi orang lain" — <span class="font-semibold">Masjid Nur</span> mengajak berbuat kebaikan.</p>
+          <div class="flex justify-center gap-5 mt-5 text-gray-400 text-xs"><span><i class="fas fa-mosque"></i> Syiar Islam</span><span><i class="fas fa-hand-holding-heart"></i> Peduli Umat</span></div>
+        </div>
+      </div>
     </main>
 
-    <footer class="mt-20 py-10 text-center text-gray-400 text-sm">
-        <p>&copy; 2026 <span id="footer_nama" class="font-semibold"></span>. Semua data diambil dari Google Sheets secara real-time.</p>
+    <footer class="bg-gray-900 text-gray-300 py-8 mt-12">
+      <div class="container mx-auto px-6 text-center text-sm">
+        <p>© <span id="tahun-dinamis"></span> <span id="footer-nama-masjid">Masjid Nur</span> | Rahmatan Lil 'Alamin · Data bersumber langsung dari Google Sheet</p>
+      </div>
     </footer>
+  </div>
 
-    <script>
-        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSTNjYH7HJ5Raf59LRfIiHQLMPWmFAiXUQqzrup4Tc6PuPxUQGyIAgcdBM5lWubSEhWgy3DIeU3P_Pq/pub?output=csv';
+  <script>
+    // Google Sheet ID
+    const SHEET_ID = '1dKHiVnVhCBziOeAh_rabPfaaL8mpgtiPYmft2OxVGYQ';
+    const DATA_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
-        async function init() {
-            try {
-                const response = await fetch(csvUrl);
-                const rawData = await response.text();
-                
-                // Parser CSV yang lebih aman untuk multiline (misi/fasilitas)
-                const rows = rawData.split(/\r?\n/);
-                const profile = {};
+    // Helper: Bersihkan nomor WA
+    function formatWaNumber(raw) {
+      if (!raw) return '';
+      let cleaned = raw.toString().replace(/\D/g, '');
+      if (cleaned.startsWith('0')) cleaned = '62' + cleaned.substring(1);
+      else if (!cleaned.startsWith('62') && cleaned.length > 0) cleaned = '62' + cleaned;
+      return cleaned;
+    }
 
-                rows.forEach(row => {
-                    // Split berdasarkan koma pertama saja (key, value)
-                    const firstComma = row.indexOf(',');
-                    if (firstComma !== -1) {
-                        let key = row.substring(0, firstComma).trim();
-                        let value = row.substring(firstComma + 1).trim();
-                        
-                        // Bersihkan tanda kutip ganda yang biasanya ada di CSV untuk data multiline
-                        value = value.replace(/^"|"$/g, '').replace(/""/g, '"');
-                        
-                        if (key) profile[key] = value;
-                    }
-                });
+    // Helper: Parse fasilitas menjadi array
+    function parseFasilitas(raw) {
+      if (!raw) return ['Informasi fasilitas belum tersedia'];
+      let text = raw;
+      let items = [];
+      if (text.includes('Ruang') || text.includes('Perpustakaan')) {
+        let temp = text.replace(/Ruang/g, '|Ruang').replace(/Perpustakaan/g, '|Perpustakaan');
+        items = temp.split('|').filter(p => p.trim().length > 0).map(p => p.trim());
+      } else if (text.includes('\n')) {
+        items = text.split('\n').filter(l => l.trim().length > 0);
+      } else if (text.includes('. ')) {
+        items = text.split('. ').filter(p => p.trim().length > 0);
+      } else {
+        items = [text];
+      }
+      return items.map(item => item.charAt(0).toUpperCase() + item.slice(1));
+    }
 
-                // Update Element
-                document.title = profile.nama_masjid || "Profil Masjid";
-                document.getElementById('nama_masjid').textContent = profile.nama_masjid;
-                document.getElementById('footer_nama').textContent = profile.nama_masjid;
-                document.getElementById('tagline').textContent = profile.tagline;
-                document.getElementById('visi').textContent = profile.visi;
-                document.getElementById('misi').textContent = profile.misi;
-                document.getElementById('alamat').textContent = profile.alamat;
-                document.getElementById('tahun_berdiri').textContent = profile.tahun_berdiri;
-                document.getElementById('fasilitas').textContent = profile.fasilitas;
-                
-                // WhatsApp Link
-                if(profile.wa_number) {
-                    document.getElementById('wa_btn').href = `https://wa.me/${profile.wa_number.replace(/\D/g,'')}`;
-                }
+    // Helper: Parse misi menjadi list item
+    function parseMisi(raw) {
+      if (!raw) return ['Mengoptimalkan Ibadah dan Kajian rutin', 'Memberdayakan Ekonomi Umat'];
+      let text = raw;
+      if (text.includes('Memberdayakan') && !text.includes('\n') && !text.includes(';')) {
+        let parts = text.split('Memberdayakan');
+        let first = parts[0].trim().replace(/\.$/, '');
+        let second = 'Memberdayakan' + (parts[1] ? parts[1].trim() : ' Ekonomi Umat');
+        return [first, second];
+      } else if (text.includes('\n')) {
+        return text.split('\n').filter(l => l.trim().length > 0);
+      } else if (text.includes(';')) {
+        return text.split(';').map(l => l.trim());
+      } else {
+        return [text];
+      }
+    }
 
-                // Sembunyikan Loader
-                const loader = document.getElementById('loader');
-                loader.classList.add('opacity-0');
-                setTimeout(() => loader.style.display = 'none', 500);
+    // Escape HTML untuk keamanan
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+        return c;
+      });
+    }
 
-            } catch (error) {
-                console.error("Error:", error);
-                alert("Gagal memuat data dari Google Sheets. Pastikan link sudah di-publish ke web.");
-            }
+    async function fetchSheetData() {
+      try {
+        const response = await fetch(DATA_URL);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const textResponse = await response.text();
+        const jsonStart = textResponse.indexOf('(');
+        const jsonEnd = textResponse.lastIndexOf(')');
+        if (jsonStart === -1 || jsonEnd === -1) throw new Error('Invalid format');
+        const jsonString = textResponse.substring(jsonStart + 1, jsonEnd);
+        const parsed = JSON.parse(jsonString);
+        const rows = parsed.table?.rows;
+        if (!rows) throw new Error('No data rows');
+
+        const dataMap = new Map();
+        for (const row of rows) {
+          const keyCell = row.c[0];
+          const valueCell = row.c[1];
+          if (keyCell && keyCell.v) {
+            let key = String(keyCell.v).trim().toLowerCase();
+            let value = valueCell && valueCell.v !== null && valueCell.v !== undefined ? String(valueCell.v).trim() : '';
+            dataMap.set(key, value);
+          }
         }
 
-        init();
-    </script>
+        // Ambil semua nilai dengan key yang sesuai
+        const namaMasjid = dataMap.get('nama_masjid') || 'Masjid Nur';
+        const tagline = dataMap.get('tagline') || 'Rahmatan Lil \'Alamin';
+        const tahunBerdiri = dataMap.get('tahun_berdiri') || '1985 Masehi / 1405 Hijriyah';
+        const visi = dataMap.get('visi') || 'Menjadi pusat peradaban Islam yang rahmatan lil \'alamin';
+        const misiRaw = dataMap.get('misi') || 'Mengoptimalkan Ibadah dan Kajian rutin Memberdayakan Ekonomi Umat';
+        const alamat = dataMap.get('alamat') || 'Jl. Masjid No. 45, Kelurahan Sukoharjo, Kota Malang';
+        let waNumber = dataMap.get('wa_number') || '6281234567890';
+        const email = dataMap.get('email') || 'info@masjidnur.id';
+        const fasilitasRaw = dataMap.get('fasilitas') || 'Ruang utama kapasitas 2000 jamaah Ruang wudhu & toilet bersih Perpustakaan Islam';
+
+        // Update Title & Meta
+        document.title = `${escapeHtml(namaMasjid)} | ${escapeHtml(tagline)}`;
+        let metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc) metaDesc.setAttribute('content', `${escapeHtml(namaMasjid)} - ${escapeHtml(visi.substring(0, 120))}`);
+        
+        // Hero section
+        document.getElementById('hero-nama').textContent = namaMasjid;
+        document.getElementById('hero-tagline').textContent = tagline;
+        document.getElementById('hero-badge').textContent = `Masjid ${namaMasjid.split(' ')[1] || 'Nur'}`;
+        
+        // Visi
+        document.getElementById('visi-text').textContent = visi;
+        
+        // Misi
+        const misiItems = parseMisi(misiRaw);
+        const misiContainer = document.getElementById('misi-list');
+        misiContainer.innerHTML = '';
+        misiItems.forEach(item => {
+          const p = document.createElement('p');
+          p.className = 'flex items-start gap-2 mb-2';
+          p.innerHTML = `<i class="fas fa-check-circle text-emerald-600 mt-1 text-sm"></i><span>${escapeHtml(item)}</span>`;
+          misiContainer.appendChild(p);
+        });
+        
+        // Tahun berdiri
+        document.getElementById('tahun-berdiri').innerHTML = escapeHtml(tahunBerdiri);
+        
+        // Alamat
+        document.getElementById('alamat-text').textContent = alamat;
+        const mapsLink = document.getElementById('maps-link');
+        if (mapsLink && alamat) {
+          mapsLink.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(alamat)}`;
+        }
+        
+        // Fasilitas
+        const fasilitasArray = parseFasilitas(fasilitasRaw);
+        const fasilitasGrid = document.getElementById('fasilitas-grid');
+        fasilitasGrid.innerHTML = '';
+        fasilitasArray.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'fasilitas-item text-gray-700';
+          div.textContent = item;
+          fasilitasGrid.appendChild(div);
+        });
+        
+        // WhatsApp
+        const cleanWa = formatWaNumber(waNumber);
+        const waUrl = `https://wa.me/${cleanWa}`;
+        const waLink = document.getElementById('wa-number-link');
+        const waHeroBtn = document.getElementById('wa-hero-btn');
+        if (waLink) {
+          waLink.href = waUrl;
+          let displayNumber = waNumber;
+          if (waNumber && !waNumber.startsWith('+')) {
+            if (waNumber.startsWith('62')) displayNumber = `+${waNumber}`;
+            else if (waNumber.startsWith('0')) displayNumber = `+62${waNumber.substring(1)}`;
+            else displayNumber = `+${waNumber}`;
+          }
+          waLink.textContent = displayNumber;
+        }
+        if (waHeroBtn) waHeroBtn.href = waUrl;
+        
+        // Email
+        const emailEl = document.getElementById('email-link');
+        if (emailEl) {
+          emailEl.href = `mailto:${email}`;
+          emailEl.textContent = email;
+        }
+        
+        // Footer nama masjid & tahun dinamis
+        document.getElementById('footer-nama-masjid').textContent = namaMasjid;
+        document.getElementById('tahun-dinamis').textContent = new Date().getFullYear();
+        
+        // Sembunyikan loading & tampilkan konten
+        const loadingScreen = document.getElementById('loading-screen');
+        const mainContent = document.getElementById('main-content');
+        loadingScreen.style.opacity = '0';
+        setTimeout(() => {
+          loadingScreen.style.display = 'none';
+          mainContent.classList.remove('hidden');
+          setTimeout(() => {
+            mainContent.style.opacity = '1';
+          }, 50);
+        }, 400);
+        
+      } catch (error) {
+        console.error('Error fetching Google Sheet:', error);
+        // Tampilkan pesan error yang jelas
+        const loadingScreen = document.getElementById('loading-screen');
+        loadingScreen.innerHTML = `
+          <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded-xl max-w-md mx-auto text-center shadow-lg">
+            <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-3"></i>
+            <p class="font-bold text-red-700 text-lg">Gagal mengambil data dari Google Sheet</p>
+            <p class="text-gray-600 mt-2">Pastikan spreadsheet dengan ID <span class="font-mono text-sm">${SHEET_ID}</span> telah dibagikan ke publik dengan akses "Siapa pun dengan tautan dapat melihat".</p>
+            <p class="text-gray-500 text-sm mt-4">Silakan periksa link atau akses sheet, lalu refresh halaman.</p>
+            <button onclick="location.reload()" class="mt-5 bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-full transition"><i class="fas fa-sync-alt mr-2"></i>Coba Lagi</button>
+          </div>
+        `;
+        loadingScreen.style.justifyContent = 'center';
+        loadingScreen.style.alignItems = 'center';
+        loadingScreen.style.display = 'flex';
+        // Sembunyikan main content
+        document.getElementById('main-content').classList.add('hidden');
+      }
+    }
+
+    // Jalankan fetch
+    fetchSheetData();
+  </script>
 </body>
 </html>
