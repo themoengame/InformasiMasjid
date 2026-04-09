@@ -2,162 +2,165 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="page-title">Memuat data masjid...</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&family=Amiri:ital@0;1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Amiri&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; }
     .arabic-font { font-family: 'Amiri', serif; }
-    .bg-masjid-pattern { background-image: radial-gradient(circle at 10% 20%, rgba(255,255,240,0.03) 2%, transparent 2.5%); background-size: 28px 28px; }
     .hero-gradient { background: linear-gradient(135deg, #0a2e38 0%, #0b4f3c 100%); }
-    .card-hover { transition: all 0.3s ease; }
-    .card-hover:hover { transform: translateY(-6px); box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.2); }
     .gold-text { color: #eab308; }
-    .loading-spinner { border: 3px solid rgba(0,0,0,0.1); border-radius: 50%; border-top: 3px solid #eab308; width: 48px; height: 48px; animation: spin 1s linear infinite; }
+    .loading-spinner { border: 3px solid #f3f3f3; border-top: 3px solid #eab308; border-radius: 50%; width: 48px; height: 48px; animation: spin 1s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .fade-in { animation: fadeIn 0.6s ease-out forwards; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-    .fasilitas-item { position: relative; padding-left: 1.5rem; }
-    .fasilitas-item:before { content: "•"; color: #eab308; font-weight: bold; font-size: 1.2rem; position: absolute; left: 0; top: -1px; }
+    .fasilitas-item { padding-left: 1.5rem; position: relative; }
+    .fasilitas-item:before { content: "•"; color: #eab308; position: absolute; left: 0; }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-50">
 
-  <!-- Loading Screen -->
-  <div id="loading-screen" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center">
-    <div class="loading-spinner mb-5"></div>
-    <p class="text-gray-600 font-medium">Mengambil data terbaru dari Google Sheet...</p>
-    <p class="text-sm text-gray-400 mt-2">Pastikan sheet sudah dipublikasikan</p>
+  <!-- Loading -->
+  <div id="loading" class="fixed inset-0 bg-white flex flex-col items-center justify-center z-50">
+    <div class="loading-spinner"></div>
+    <p class="mt-4 text-gray-600">Mengambil data terbaru dari Google Sheet...</p>
   </div>
 
-  <!-- Main Content -->
-  <div id="main-content" class="hidden opacity-0 transition-opacity duration-500">
-    <!-- Hero Section -->
-    <header class="hero-gradient text-white relative overflow-hidden shadow-lg">
-      <div class="absolute inset-0 bg-masjid-pattern opacity-30"></div>
-      <div class="container mx-auto px-6 py-12 md:py-20 relative z-10 text-center md:text-left">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+  <!-- Main content (sembunyikan sampai data siap) -->
+  <div id="main" class="hidden opacity-0 transition-opacity duration-500">
+    <header class="hero-gradient text-white relative">
+      <div class="container mx-auto px-6 py-16 md:py-20 text-center md:text-left">
+        <div class="md:flex md:justify-between md:items-center">
           <div>
-            <div class="inline-block bg-white/20 backdrop-blur-sm rounded-full px-4 py-1 text-sm font-semibold mb-4"><i class="fas fa-mosque mr-2"></i> <span id="hero-badge">Masjid</span></div>
-            <h1 id="hero-nama" class="text-4xl md:text-5xl lg:text-6xl font-bold arabic-font">Memuat...</h1>
-            <p id="hero-tagline" class="text-xl md:text-2xl text-emerald-100 italic mt-3 border-l-4 border-gold-text pl-4"></p>
-            <div class="mt-6 flex gap-4">
+            <div class="inline-block bg-white/20 rounded-full px-4 py-1 text-sm mb-4"><i class="fas fa-mosque mr-2"></i> <span id="hero-badge">Masjid</span></div>
+            <h1 id="hero-nama" class="text-4xl md:text-6xl font-bold arabic-font">Masjid</h1>
+            <p id="hero-tagline" class="text-xl text-emerald-100 italic mt-3 border-l-4 border-gold-text pl-4"></p>
+            <div class="mt-6 flex gap-4 justify-center md:justify-start">
               <a href="#profil" class="bg-gold-text hover:bg-amber-500 text-gray-900 font-semibold px-6 py-2 rounded-full shadow-md flex items-center gap-2"><i class="fas fa-landmark"></i> Profil</a>
-              <a href="#" id="wa-hero-btn" target="_blank" class="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-full px-6 py-2 flex items-center gap-2"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+              <a href="#" id="wa-hero" target="_blank" class="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full px-6 py-2 flex items-center gap-2"><i class="fab fa-whatsapp"></i> WhatsApp</a>
             </div>
           </div>
           <div class="hidden md:block w-32 h-32 bg-gold-text/20 rounded-full flex items-center justify-center"><i class="fas fa-moon text-6xl text-amber-300"></i></div>
         </div>
       </div>
-      <div class="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-gray-50 to-transparent"></div>
     </header>
 
-    <main class="container mx-auto px-6 py-12 md:py-16" id="profil">
-      <div class="space-y-12 fade-in">
-        <!-- Visi & Misi -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 card-hover border-b-4 border-gold-text">
-            <div class="flex items-center gap-3 mb-4"><div class="bg-emerald-100 p-3 rounded-full"><i class="fas fa-eye text-emerald-700 text-xl"></i></div><h2 class="text-2xl font-bold">Visi</h2></div>
-            <p id="visi-text" class="text-gray-700 leading-relaxed text-lg italic"></p>
-          </div>
-          <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 card-hover border-b-4 border-gold-text">
-            <div class="flex items-center gap-3 mb-4"><div class="bg-emerald-100 p-3 rounded-full"><i class="fas fa-bullhorn text-emerald-700 text-xl"></i></div><h2 class="text-2xl font-bold">Misi</h2></div>
-            <div id="misi-list" class="space-y-2"></div>
-          </div>
+    <main class="container mx-auto px-6 py-12" id="profil">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <div class="bg-white rounded-2xl shadow-lg p-6 border-b-4 border-gold-text">
+          <div class="flex items-center gap-3 mb-4"><div class="bg-emerald-100 p-3 rounded-full"><i class="fas fa-eye text-emerald-700 text-xl"></i></div><h2 class="text-2xl font-bold">Visi</h2></div>
+          <p id="visi-text" class="text-gray-700 text-lg italic"></p>
         </div>
+        <div class="bg-white rounded-2xl shadow-lg p-6 border-b-4 border-gold-text">
+          <div class="flex items-center gap-3 mb-4"><div class="bg-emerald-100 p-3 rounded-full"><i class="fas fa-bullhorn text-emerald-700 text-xl"></i></div><h2 class="text-2xl font-bold">Misi</h2></div>
+          <div id="misi-list" class="space-y-2"></div>
+        </div>
+      </div>
 
-        <!-- Fasilitas & Tahun -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div class="lg:col-span-2 bg-white rounded-2xl shadow-lg overflow-hidden">
-            <div class="bg-emerald-800 px-6 py-4"><div class="flex items-center gap-2 text-white"><i class="fas fa-building text-xl"></i><h2 class="text-xl font-bold">Fasilitas</h2></div></div>
-            <div class="p-6"><div id="fasilitas-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div></div>
-          </div>
-          <div class="bg-gradient-to-br from-emerald-50 to-white rounded-2xl shadow-lg p-6">
-            <div class="flex items-center gap-2 text-emerald-800 border-b border-emerald-200 pb-3 mb-4"><i class="fas fa-calendar-alt text-xl"></i><h2 class="text-xl font-bold">Tahun Berdiri</h2></div>
-            <p id="tahun-berdiri" class="text-3xl font-bold text-emerald-700 mb-2">--</p>
-          </div>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        <div class="lg:col-span-2 bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div class="bg-emerald-800 px-6 py-4 text-white font-bold"><i class="fas fa-building mr-2"></i> Fasilitas</div>
+          <div class="p-6"><div id="fasilitas-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div></div>
         </div>
+        <div class="bg-gradient-to-br from-emerald-50 to-white rounded-2xl shadow-lg p-6">
+          <div class="flex items-center gap-2 text-emerald-800 border-b pb-3 mb-4"><i class="fas fa-calendar-alt"></i><h2 class="text-xl font-bold">Tahun Berdiri</h2></div>
+          <p id="tahun-berdiri" class="text-3xl font-bold text-emerald-700">--</p>
+        </div>
+      </div>
 
-        <!-- Alamat & Kontak -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div class="bg-white rounded-2xl shadow-lg p-6">
-            <div class="flex items-center gap-3 mb-5"><div class="bg-red-100 p-2 rounded-full"><i class="fas fa-map-marker-alt text-red-600 text-xl"></i></div><h2 class="text-2xl font-bold">Lokasi</h2></div>
-            <p id="alamat-text" class="text-gray-700 mb-4"></p>
-            <a id="maps-link" href="#" target="_blank" class="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-5 py-2 rounded-full"><i class="fab fa-google"></i> Buka Maps</a>
-          </div>
-          <div class="bg-white rounded-2xl shadow-lg p-6">
-            <div class="flex items-center gap-3 mb-5"><div class="bg-green-100 p-2 rounded-full"><i class="fas fa-phone-alt text-green-700 text-xl"></i></div><h2 class="text-2xl font-bold">Kontak</h2></div>
-            <div class="space-y-4">
-              <div><i class="fab fa-whatsapp text-green-600 mr-3"></i><a id="wa-number-link" href="#" target="_blank" class="font-semibold hover:text-green-600">--</a></div>
-              <div><i class="fas fa-envelope text-amber-600 mr-3"></i><a id="email-link" href="#" class="font-semibold hover:text-emerald-600">--</a></div>
-            </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+          <div class="flex items-center gap-3 mb-5"><div class="bg-red-100 p-2 rounded-full"><i class="fas fa-map-marker-alt text-red-600 text-xl"></i></div><h2 class="text-2xl font-bold">Lokasi</h2></div>
+          <p id="alamat-text" class="text-gray-700 mb-4"></p>
+          <a id="maps-link" href="#" target="_blank" class="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-5 py-2 rounded-full"><i class="fab fa-google"></i> Buka Maps</a>
+        </div>
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+          <div class="flex items-center gap-3 mb-5"><div class="bg-green-100 p-2 rounded-full"><i class="fas fa-phone-alt text-green-700 text-xl"></i></div><h2 class="text-2xl font-bold">Kontak</h2></div>
+          <div class="space-y-3">
+            <div><i class="fab fa-whatsapp text-green-600 w-6"></i> <a id="wa-link" href="#" target="_blank" class="font-semibold hover:text-green-600"></a></div>
+            <div><i class="fas fa-envelope text-amber-600 w-6"></i> <a id="email-link" href="#" class="font-semibold hover:text-emerald-600"></a></div>
           </div>
         </div>
+      </div>
 
-        <div class="text-center pt-8 border-t border-gray-200">
-          <p class="text-gray-500 text-sm italic">"Sebaik-baik manusia adalah yang bermanfaat bagi orang lain" — <span id="footer-nama-masjid">Masjid</span></p>
-        </div>
+      <div class="text-center mt-12 pt-8 border-t border-gray-200">
+        <p class="text-gray-500 italic">"Sebaik-baik manusia adalah yang bermanfaat bagi orang lain" — <span id="footer-nama"></span></p>
       </div>
     </main>
 
-    <footer class="bg-gray-900 text-gray-300 py-8 mt-12 text-center text-sm">
-      <p>© <span id="tahun-dinamis"></span> <span id="footer-nama-masjid2"></span> | Data langsung dari Google Sheet (real-time)</p>
+    <footer class="bg-gray-900 text-gray-300 py-6 text-center text-sm">
+      <p>© <span id="tahun-dinamis"></span> <span id="footer-nama2"></span> | Data real-time dari Google Sheet</p>
     </footer>
   </div>
 
   <script>
-    const SHEET_ID = '1dKHiVnVhCBziOeAh_rabPfaaL8mpgtiPYmft2OxVGYQ';
-    // Tambahkan parameter timestamp untuk menghindari cache browser & Google cache
-    const timestamp = new Date().getTime();
-    const DATA_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&_=${timestamp}`;
+    // ========== GUNAKAN URL CSV PUBLIK ANDA ==========
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSTNjYH7HJ5Raf59LRfIiHQLMPWmFAiXUQqzrup4Tc6PuPxUQGyIAgcdBM5lWubSEhWgy3DIeU3P_Pq/pub?gid=0&single=true&output=csv';
+    // Tambahkan timestamp untuk menghindari cache
+    const fetchUrl = `${CSV_URL}&_=${Date.now()}`;
 
-    async function fetchSheetData() {
+    async function loadData() {
       try {
-        const response = await fetch(DATA_URL, { cache: 'no-store' });
+        const response = await fetch(fetchUrl, { cache: 'no-store' });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const text = await response.text();
-        const jsonStart = text.indexOf('(');
-        const jsonEnd = text.lastIndexOf(')');
-        if (jsonStart === -1 || jsonEnd === -1) throw new Error('Invalid response');
-        const jsonStr = text.substring(jsonStart + 1, jsonEnd);
-        const data = JSON.parse(jsonStr);
-        const rows = data.table?.rows;
-        if (!rows || rows.length === 0) throw new Error('Sheet kosong');
-
-        const map = new Map();
-        for (const row of rows) {
-          const key = row.c[0]?.v?.toString().trim().toLowerCase();
-          const val = row.c[1]?.v?.toString().trim() || '';
-          if (key) map.set(key, val);
+        const csvText = await response.text();
+        
+        // Parsing CSV sederhana (asumsi kolom pertama key, kedua value)
+        const lines = csvText.split(/\r?\n/).filter(line => line.trim().length > 0);
+        if (lines.length === 0) throw new Error('CSV kosong');
+        
+        // Baris pertama mungkin header? Cek apakah baris pertama berisi 'key' dan 'value' (case insensitive)
+        let startIndex = 0;
+        const firstLine = lines[0].toLowerCase();
+        if (firstLine.includes('key') && firstLine.includes('value')) {
+          startIndex = 1; // lewati header
         }
-
-        // Ambil data
-        const nama = map.get('nama_masjid') || 'Masjid Nur';
-        const tagline = map.get('tagline') || 'Rahmatan Lil Alamin';
-        const visi = map.get('visi') || 'Menjadi pusat peradaban Islam';
-        const misiRaw = map.get('misi') || 'Mengoptimalkan ibadah dan kajian rutin\nMemberdayakan ekonomi umat';
-        const tahun = map.get('tahun_berdiri') || '1985 M / 1405 H';
-        const alamat = map.get('alamat') || 'Jl. Masjid No. 45, Malang';
-        const wa = map.get('wa_number') || '6281234567890';
-        const email = map.get('email') || 'info@masjidnur.id';
-        const fasilitasRaw = map.get('fasilitas') || 'Ruang utama kapasitas 2000 jamaah\nRuang wudhu & toilet bersih\nPerpustakaan Islam';
-
-        // Update DOM
-        document.title = `${nama} | ${tagline}`;
+        
+        const dataMap = new Map();
+        for (let i = startIndex; i < lines.length; i++) {
+          // Pisahkan berdasarkan koma (sederhana, tidak menangani kutipan kompleks)
+          let line = lines[i];
+          // Cari koma pertama
+          let commaIndex = line.indexOf(',');
+          if (commaIndex === -1) continue;
+          let key = line.substring(0, commaIndex).trim().toLowerCase();
+          let value = line.substring(commaIndex + 1).trim();
+          // Hapus kemungkinan tanda kutip di awal/akhir value
+          if (value.startsWith('"') && value.endsWith('"')) value = value.slice(1, -1);
+          dataMap.set(key, value);
+        }
+        
+        // Ambil nilai (gunakan default hanya jika key tidak ditemukan, untuk mencegah error)
+        const nama = dataMap.get('nama_masjid') || '';
+        const tagline = dataMap.get('tagline') || '';
+        const visi = dataMap.get('visi') || '';
+        const misiRaw = dataMap.get('misi') || '';
+        const tahun = dataMap.get('tahun_berdiri') || '';
+        const alamat = dataMap.get('alamat') || '';
+        const wa = dataMap.get('wa_number') || '';
+        const email = dataMap.get('email') || '';
+        const fasilitasRaw = dataMap.get('fasilitas') || '';
+        
+        // Validasi minimal data ada
+        if (!nama) throw new Error('Key "nama_masjid" tidak ditemukan di CSV. Pastikan kolom pertama berisi key dan kolom kedua value.');
+        
+        // Update seluruh halaman
+        document.title = `${nama} | ${tagline || 'Masjid'}`;
         document.getElementById('hero-nama').innerText = nama;
         document.getElementById('hero-tagline').innerText = tagline;
-        document.getElementById('hero-badge').innerHTML = `<i class="fas fa-mosque mr-1"></i> ${nama.split(' ')[0]}`;
+        document.getElementById('hero-badge').innerText = nama.split(' ')[0];
         document.getElementById('visi-text').innerText = visi;
         document.getElementById('tahun-berdiri').innerHTML = tahun;
         document.getElementById('alamat-text').innerText = alamat;
-        document.getElementById('footer-nama-masjid').innerText = nama;
-        document.getElementById('footer-nama-masjid2').innerText = nama;
+        document.getElementById('footer-nama').innerText = nama;
+        document.getElementById('footer-nama2').innerText = nama;
         document.getElementById('tahun-dinamis').innerText = new Date().getFullYear();
-
-        // Misi
-        const misiItems = misiRaw.split(/\n|;|\.\s/).filter(m => m.trim().length > 0);
+        
+        // Misi (split berdasarkan baris baru, titik koma, atau titik)
+        let misiItems = [];
+        if (misiRaw) {
+          misiItems = misiRaw.split(/\r?\n|;|\.\s/).filter(m => m.trim().length > 0);
+        }
         const misiDiv = document.getElementById('misi-list');
         misiDiv.innerHTML = '';
         misiItems.forEach(m => {
@@ -166,54 +169,63 @@
           p.innerHTML = `<i class="fas fa-check-circle text-emerald-600 mt-1 text-sm"></i><span>${escapeHtml(m.trim())}</span>`;
           misiDiv.appendChild(p);
         });
-
+        
         // Fasilitas
-        const fasItems = fasilitasRaw.split(/\n|\.\s(?=[A-Z])/).filter(f => f.trim().length > 0);
+        let fasItems = [];
+        if (fasilitasRaw) {
+          fasItems = fasilitasRaw.split(/\r?\n|\.\s(?=[A-Z])/).filter(f => f.trim().length > 0);
+        }
         const fasGrid = document.getElementById('fasilitas-grid');
         fasGrid.innerHTML = '';
         fasItems.forEach(f => {
           const div = document.createElement('div');
           div.className = 'fasilitas-item';
-          div.innerText = f.trim().replace(/^[•\-\*]\s*/, '');
+          div.innerText = f.trim().replace(/^[•\-*]\s*/, '');
           fasGrid.appendChild(div);
         });
-
+        
         // WhatsApp
-        const cleanWa = wa.replace(/\D/g, '');
-        const waUrl = `https://wa.me/${cleanWa.startsWith('62') ? cleanWa : '62' + cleanWa}`;
-        document.getElementById('wa-number-link').href = waUrl;
-        document.getElementById('wa-hero-btn').href = waUrl;
-        let displayWa = wa;
-        if (!wa.startsWith('+')) displayWa = wa.startsWith('62') ? `+${wa}` : `+62${wa}`;
-        document.getElementById('wa-number-link').innerText = displayWa;
-
-        // Email & Maps
-        document.getElementById('email-link').href = `mailto:${email}`;
-        document.getElementById('email-link').innerText = email;
-        document.getElementById('maps-link').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(alamat)}`;
-
+        if (wa) {
+          const cleanWa = wa.replace(/\D/g, '');
+          const waUrl = `https://wa.me/${cleanWa.startsWith('62') ? cleanWa : '62' + cleanWa}`;
+          document.getElementById('wa-link').href = waUrl;
+          document.getElementById('wa-hero').href = waUrl;
+          let displayWa = wa;
+          if (!wa.startsWith('+')) displayWa = wa.startsWith('62') ? `+${wa}` : `+62${wa}`;
+          document.getElementById('wa-link').innerText = displayWa;
+        }
+        
+        // Email
+        if (email) {
+          document.getElementById('email-link').href = `mailto:${email}`;
+          document.getElementById('email-link').innerText = email;
+        }
+        
+        // Maps
+        if (alamat) {
+          document.getElementById('maps-link').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(alamat)}`;
+        }
+        
         // Tampilkan konten
-        const loading = document.getElementById('loading-screen');
-        const content = document.getElementById('main-content');
-        loading.style.opacity = '0';
-        setTimeout(() => {
-          loading.style.display = 'none';
-          content.classList.remove('hidden');
-          setTimeout(() => content.style.opacity = '1', 50);
-        }, 400);
+        document.getElementById('loading').style.display = 'none';
+        const main = document.getElementById('main');
+        main.classList.remove('hidden');
+        setTimeout(() => main.style.opacity = '1', 50);
+        
       } catch (err) {
         console.error(err);
-        document.getElementById('loading-screen').innerHTML = `
+        document.getElementById('loading').innerHTML = `
           <div class="bg-red-50 border-l-4 border-red-500 p-6 max-w-md mx-auto text-center">
             <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-3"></i>
             <p class="font-bold text-red-700">Gagal mengambil data dari Google Sheet</p>
-            <p class="text-gray-600 mt-2">Pastikan sheet sudah dipublikasikan (akses "Siapa pun dengan tautan dapat melihat")</p>
+            <p class="text-gray-600 mt-2">Pastikan URL CSV benar dan sheet sudah dipublikasikan.</p>
+            <p class="text-xs text-gray-500 mt-2">Detail: ${err.message}</p>
             <button onclick="location.reload()" class="mt-4 bg-red-600 text-white px-4 py-2 rounded-full"><i class="fas fa-sync-alt mr-2"></i>Refresh</button>
           </div>
         `;
       }
     }
-
+    
     function escapeHtml(str) {
       return str.replace(/[&<>]/g, function(m) {
         if (m === '&') return '&amp;';
@@ -222,8 +234,8 @@
         return m;
       });
     }
-
-    fetchSheetData();
+    
+    loadData();
   </script>
 </body>
 </html>
