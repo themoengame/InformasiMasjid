@@ -3,26 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masjid An-Nur | Data Langsung dari Google Spreadsheet</title>
+    <title>Masjid An-Nur | Data Langsung dari Spreadsheet</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #fefcf5; color: #1e2a2e; }
-        :root { --primary: #0b5e3c; --primary-dark: #08452b; --secondary: #d4a373; --border-light: #e9e0d0; --card-bg: #ffffff; }
+        :root { --primary: #0b5e3c; --primary-dark: #08452b; --secondary: #d4a373; --border-light: #e9e0d0; }
         .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
-        .hero { background-size: cover; background-position: center; position: relative; min-height: 85vh; display: flex; align-items: center; text-align: center; color: white; }
+        .hero { background-size: cover; background-position: center; position: relative; min-height: 75vh; display: flex; align-items: center; text-align: center; color: white; }
         .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(0,40,20,0.75), rgba(0,20,10,0.65)); }
         .hero-content { position: relative; z-index: 2; max-width: 800px; margin: 0 auto; padding: 2rem; }
         .hero h1 { font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 1rem; }
-        .hero-tagline { background: rgba(212,163,115,0.9); padding: 0.5rem 1.25rem; border-radius: 40px; font-weight: 600; color: #1e2a2e; display: inline-block; }
+        .hero-tagline { background: rgba(212,163,115,0.9); padding: 0.5rem 1.25rem; border-radius: 40px; font-weight: 600; display: inline-block; color: #1e2a2e; }
         section { padding: 5rem 0; border-bottom: 1px solid var(--border-light); }
         .section-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 2rem; display: inline-block; }
         .section-title:after { content: ''; display: block; width: 60%; height: 3px; background: var(--secondary); margin-top: 0.5rem; }
-        .card { background: var(--card-bg); border-radius: 28px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); padding: 1.8rem; border: 1px solid rgba(212,163,115,0.2); }
-        .grid-2, .grid-3 { display: grid; gap: 2rem; }
-        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(320px,1fr)); }
-        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); }
+        .card { background: white; border-radius: 28px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); padding: 1.8rem; border: 1px solid rgba(212,163,115,0.2); }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px,1fr)); gap: 2rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 2rem; }
         .info-list { list-style: none; }
         .info-list li { display: flex; gap: 12px; margin-bottom: 1rem; }
         .info-list li i { width: 24px; color: var(--secondary); }
@@ -32,7 +31,7 @@
         .pengurus-img { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; margin: 0 auto 1rem; border: 3px solid var(--secondary); }
         .galeri-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 1.5rem; }
         .galeri-item { border-radius: 24px; overflow: hidden; background: white; }
-        .galeri-item img { width: 100%; height: 200px; object-fit: cover; transition: 0.3s; }
+        .galeri-item img { width: 100%; height: 200px; object-fit: cover; }
         .galeri-caption { padding: 0.8rem; text-align: center; font-weight: 600; }
         .social-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem; }
         .social-links a { font-size: 1.8rem; color: var(--primary-dark); }
@@ -67,13 +66,13 @@
 <script>
     const SPREADSHEET_ID = '1dKHiVnVhCBziOeAh_rabPfaaL8mpgtiPYmft2OxVGYQ';
 
-    // Fungsi mengambil data sheet menggunakan Google Visualization API (publik)
-    async function fetchSheetData(sheetName) {
+    // Fungsi mengambil data sheet dengan format RAW (text apa adanya)
+    // Menggunakan gviz JSON, kita ambil formatted value (f) jika ada, atau value (v) sebagai string
+    async function fetchSheetRaw(sheetName) {
         const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`HTTP ${response.status}: Gagal mengambil sheet ${sheetName}`);
-        const text = await response.text();
-        // Hapus callback wrapper
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status} - Gagal ambil sheet ${sheetName}`);
+        const text = await resp.text();
         const jsonStr = text.substring(text.indexOf('(') + 1, text.lastIndexOf(')'));
         const json = JSON.parse(jsonStr);
         const cols = json.table.cols.map(c => c.label);
@@ -81,15 +80,25 @@
         return rows.map(row => {
             const obj = {};
             row.c.forEach((cell, idx) => {
-                obj[cols[idx]] = cell ? cell.v : null;
+                let rawValue = null;
+                if (cell) {
+                    // Prioritaskan formatted string (f) karena untuk waktu sudah dalam format teks
+                    if (cell.f !== undefined && cell.f !== null) {
+                        rawValue = cell.f;
+                    } else if (cell.v !== undefined && cell.v !== null) {
+                        // Jika tidak ada formatted, gunakan value as string
+                        rawValue = String(cell.v);
+                    }
+                }
+                obj[cols[idx]] = rawValue;
             });
             return obj;
         });
     }
 
-    // Helper untuk sheet profil yang berbentuk key-value
+    // Untuk sheet 'profil' yang key-value, juga raw
     async function getProfilMap() {
-        const rows = await fetchSheetData('profil');
+        const rows = await fetchSheetRaw('profil');
         const map = {};
         rows.forEach(row => { if (row.key) map[row.key] = row.value; });
         return map;
@@ -98,21 +107,21 @@
     window.addEventListener('DOMContentLoaded', async () => {
         const contentDiv = document.getElementById('dynamic-content');
         try {
-            // Ambil semua sheet secara paralel
+            // Ambil semua sheet dalam bentuk RAW (teks)
             const [profilMap, jadwalSholat, jadwalImam, jadwalMuadzin, kajian, pengurus, keuangan, galeri, hero, sosialMedia] = await Promise.all([
                 getProfilMap(),
-                fetchSheetData('jadwal_sholat'),
-                fetchSheetData('jadwal_imam'),
-                fetchSheetData('jadwal_muadzin'),
-                fetchSheetData('kajian'),
-                fetchSheetData('pengurus'),
-                fetchSheetData('keuangan'),
-                fetchSheetData('galeri'),
-                fetchSheetData('hero'),
-                fetchSheetData('sosial_media')
+                fetchSheetRaw('jadwal_sholat'),
+                fetchSheetRaw('jadwal_imam'),
+                fetchSheetRaw('jadwal_muadzin'),
+                fetchSheetRaw('kajian'),
+                fetchSheetRaw('pengurus'),
+                fetchSheetRaw('keuangan'),
+                fetchSheetRaw('galeri'),
+                fetchSheetRaw('hero'),
+                fetchSheetRaw('sosial_media')
             ]);
 
-            // ========== HERO ==========
+            // === HERO ===
             const heroData = hero[0] || {};
             const heroBg = heroData.background_url || 'https://images.unsplash.com/photo-1584555616317-d9c3f2b54e64?auto=format&w=1600';
             document.getElementById('hero-section').style.backgroundImage = `url('${heroBg}')`;
@@ -120,39 +129,62 @@
             document.getElementById('hero-subtitle').innerText = heroData.subjudul || 'Pusat kegiatan ibadah, dakwah, dan pemberdayaan umat.';
             document.getElementById('hero-tagline').innerHTML = `<i class="fas fa-seedling"></i> ${profilMap.tagline || 'Rahmatan Lil Alamin'}`;
 
-            // ========== PROFIL ==========
+            // === PROFIL ===
             const nama = profilMap.nama_masjid || 'Masjid An-Nur';
             const tahun = profilMap.tahun_berdiri || '1985 M / 1405 H';
             const alamat = profilMap.alamat || 'Jl. Masjid No. 45, Kelurahan Sukamaju, Kota Bandung';
-            const wa = profilMap.wa_number ? profilMap.wa_number.toString().replace('.0','') : '6281234567890';
+            let wa = profilMap.wa_number;
+            if (wa) wa = wa.toString().replace('.0', '');
+            else wa = '6281234567890';
             const email = profilMap.email || 'info@masjidannur.id';
             const visi = profilMap.visi || 'Menjadi pusat peradaban Islam yang rahmatan lil alamin';
             const misi = profilMap.misi || 'Mengoptimalkan ibadah dan kajian rutin<br>Memberdayakan ekonomi umat';
             const fasilitasRaw = profilMap.fasilitas || 'Ruang utama kapasitas 800 jamaah<br>Ruang wudhu & toilet bersih<br>Perpustakaan Islam';
             const fasilitasArr = fasilitasRaw.split('<br>');
 
-            // ========== JADWAL SHOLAT + IMAM + MUADZIN ==========
+            // === JADWAL SHOLAT, IMAM, MUADZIN (RAW TEXT, TANPA KONVERSI) ===
+            // Buat map berdasarkan nama sholat (case sensitive, sesuai data sheet)
             const prayerMap = new Map();
-            jadwalSholat.forEach(s => { prayerMap.set(s.sholat, { waktu: s.waktu }); });
-            jadwalImam.forEach(i => { 
-                if (prayerMap.has(i.sholat)) prayerMap.get(i.sholat).imam = i.nama_imam;
-                else prayerMap.set(i.sholat, { imam: i.nama_imam });
+            // Masukkan jadwal sholat (waktu)
+            jadwalSholat.forEach(s => {
+                let sholatName = s.sholat;
+                let waktuRaw = s.waktu !== undefined && s.waktu !== null ? s.waktu : '-';
+                prayerMap.set(sholatName, { waktu: waktuRaw, imam: '-', muadzin: '-' });
             });
+            // Masukkan imam
+            jadwalImam.forEach(i => {
+                let sholatName = i.sholat;
+                let imamRaw = i.nama_imam !== undefined && i.nama_imam !== null ? i.nama_imam : '-';
+                if (prayerMap.has(sholatName)) {
+                    prayerMap.get(sholatName).imam = imamRaw;
+                } else {
+                    prayerMap.set(sholatName, { waktu: '-', imam: imamRaw, muadzin: '-' });
+                }
+            });
+            // Masukkan muadzin
             jadwalMuadzin.forEach(m => {
-                if (prayerMap.has(m.sholat)) prayerMap.get(m.sholat).muadzin = m.nama_muadzin;
-                else prayerMap.set(m.sholat, { muadzin: m.nama_muadzin });
-            });
-            const sholatOrder = ['Subuh', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya'];
-            let jadwalRows = '';
-            sholatOrder.forEach(sh => {
-                const d = prayerMap.get(sh) || {};
-                const waktu = d.waktu ? d.waktu.substring(0,5) : '-';
-                const imam = d.imam || '-';
-                const muadzin = d.muadzin || '-';
-                jadwalRows += `<tr><td><strong>${sh}</strong></td><td>${waktu}</td><td>${imam}</td><td>${muadzin}</td></tr>`;
+                let sholatName = m.sholat;
+                let muadzinRaw = m.nama_muadzin !== undefined && m.nama_muadzin !== null ? m.nama_muadzin : '-';
+                if (prayerMap.has(sholatName)) {
+                    prayerMap.get(sholatName).muadzin = muadzinRaw;
+                } else {
+                    prayerMap.set(sholatName, { waktu: '-', imam: '-', muadzin: muadzinRaw });
+                }
             });
 
-            // ========== KAJIAN ==========
+            // Urutan sholat tetap
+            const sholatOrder = ['Subuh', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya'];
+            let jadwalRows = '';
+            for (let sh of sholatOrder) {
+                const data = prayerMap.get(sh);
+                if (data) {
+                    jadwalRows += `<tr><td><strong>${sh}</strong></td><td>${data.waktu}</td><td>${data.imam}</td><td>${data.muadzin}</td></tr>`;
+                } else {
+                    jadwalRows += `<tr><td><strong>${sh}</strong></td><td>-</td><td>-</td><td>-</td></tr>`;
+                }
+            }
+
+            // === KAJIAN ===
             let kajianHtml = '';
             kajian.forEach(k => {
                 const icon = k.icon || 'fa-book';
@@ -161,25 +193,27 @@
                         <i class="fas ${icon}" style="font-size: 2rem; color: var(--secondary); margin-bottom: 0.8rem;"></i>
                         <h3>${k.judul || 'Kajian'}</h3>
                         <p>${k.deskripsi || ''}</p>
-                        <a href="${k.link || '#'}" target="_blank" class="btn-outline" style="display: inline-block; margin-top: 1rem; color: var(--primary);">Detail <i class="fas fa-arrow-right"></i></a>
+                        <a href="${k.link || '#'}" target="_blank" style="display: inline-block; margin-top: 1rem; color: var(--primary);">Detail <i class="fas fa-arrow-right"></i></a>
                     </div>
                 `;
             });
+            if (!kajianHtml) kajianHtml = '<div class="card">Belum ada data kajian</div>';
 
-            // ========== PENGURUS ==========
+            // === PENGURUS ===
             let pengurusHtml = '';
             pengurus.forEach(p => {
                 const foto = p.foto_url && p.foto_url.trim() ? p.foto_url : 'https://via.placeholder.com/110?text=No+Image';
                 pengurusHtml += `
-                    <div class="card pengurus-card" style="text-align: center;">
+                    <div class="card" style="text-align: center;">
                         <img class="pengurus-img" src="${foto}" alt="${p.nama}" onerror="this.src='https://via.placeholder.com/110?text=Photo'">
                         <div class="pengurus-name">${p.nama || '-'}</div>
                         <div class="pengurus-jabatan" style="color: var(--secondary);">${p.jabatan || '-'}</div>
                     </div>
                 `;
             });
+            if (!pengurusHtml) pengurusHtml = '<div class="card">Data pengurus belum tersedia</div>';
 
-            // ========== KEUANGAN ==========
+            // === KEUANGAN ===
             let keuanganHtml = '';
             if (keuangan.length) {
                 const k = keuangan[0];
@@ -195,7 +229,7 @@
                 `;
             } else { keuanganHtml = '<div class="card">Belum ada data keuangan</div>'; }
 
-            // ========== GALERI ==========
+            // === GALERI ===
             let galeriHtml = '';
             galeri.sort((a,b) => (a.urutan||0) - (b.urutan||0));
             galeri.forEach(g => {
@@ -206,17 +240,17 @@
                     </div>
                 `;
             });
+            if (!galeriHtml) galeriHtml = '<div class="card">Belum ada galeri</div>';
 
-            // ========== SOSIAL MEDIA ==========
-            let sosmedHtml = '';
-            const iconMap = { facebook: 'fab fa-facebook', instagram: 'fab fa-instagram', youtube: 'fab fa-youtube', twitter: 'fab fa-twitter' };
+            // === SOSIAL MEDIA ===
             let linkHtml = '';
+            const iconMap = { facebook: 'fab fa-facebook', instagram: 'fab fa-instagram', youtube: 'fab fa-youtube', twitter: 'fab fa-twitter' };
             sosialMedia.forEach(sm => {
                 const plat = sm.platform?.toLowerCase();
                 const icon = iconMap[plat] || 'fas fa-link';
                 linkHtml += `<a href="${sm.url}" target="_blank"><i class="${icon}"></i></a>`;
             });
-            sosmedHtml = `
+            const sosmedHtml = `
                 <div class="card" style="text-align: center;">
                     <div class="social-links">${linkHtml || '<i>Tidak ada media sosial</i>'}</div>
                     <div class="info-list" style="max-width: 400px; margin: 0 auto;">
@@ -226,7 +260,7 @@
                 </div>
             `;
 
-            // ========== RENDER SEMUA SECTION ==========
+            // === RENDER SEMUA ===
             contentDiv.innerHTML = `
                 <section id="profil">
                     <h2 class="section-title">Profil Masjid</h2>
@@ -259,16 +293,17 @@
                             <tbody>${jadwalRows}</tbody>
                         </table>
                     </div>
+                    <p style="margin-top: 0.5rem; font-size: 0.8rem; color: gray;">Data ditampilkan persis seperti di spreadsheet (teks mentah, tanpa konversi)</p>
                 </section>
 
                 <section id="kajian">
                     <h2 class="section-title">Kajian Rutin</h2>
-                    <div class="grid-3">${kajianHtml || '<div class="card">Belum ada data kajian</div>'}</div>
+                    <div class="grid-3">${kajianHtml}</div>
                 </section>
 
                 <section id="pengurus">
                     <h2 class="section-title">Pengurus DKM</h2>
-                    <div class="grid-3">${pengurusHtml || '<div class="card">Data pengurus belum tersedia</div>'}</div>
+                    <div class="grid-3">${pengurusHtml}</div>
                 </section>
 
                 <section id="keuangan">
@@ -278,7 +313,7 @@
 
                 <section id="galeri">
                     <h2 class="section-title">Galeri Kegiatan</h2>
-                    <div class="galeri-grid">${galeriHtml || '<div class="card">Belum ada galeri</div>'}</div>
+                    <div class="galeri-grid">${galeriHtml}</div>
                 </section>
 
                 <section id="sosmed">
@@ -286,8 +321,6 @@
                     ${sosmedHtml}
                 </section>
             `;
-
-            console.log('✅ Semua data berhasil dimuat dari spreadsheet');
         } catch (err) {
             console.error(err);
             contentDiv.innerHTML = `
@@ -299,7 +332,7 @@
                 </div>
             `;
             document.getElementById('hero-title').innerText = 'Masjid An-Nur';
-            document.getElementById('hero-subtitle').innerText = 'Periksa koneksi spreadsheet';
+            document.getElementById('hero-subtitle').innerText = 'Periksa publikasi spreadsheet';
         }
     });
 </script>
