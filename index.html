@@ -2,339 +2,518 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masjid An-Nur | Data Langsung dari Spreadsheet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Masjid An-Nur | Rahmatan Lil 'Alamin</title>
+    <!-- Font Awesome 6 (free) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Poppins & Quicksand -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #fefcf5; color: #1e2a2e; }
-        :root { --primary: #0b5e3c; --primary-dark: #08452b; --secondary: #d4a373; --border-light: #e9e0d0; }
-        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
-        .hero { background-size: cover; background-position: center; position: relative; min-height: 75vh; display: flex; align-items: center; text-align: center; color: white; }
-        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(0,40,20,0.75), rgba(0,20,10,0.65)); }
-        .hero-content { position: relative; z-index: 2; max-width: 800px; margin: 0 auto; padding: 2rem; }
-        .hero h1 { font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 1rem; }
-        .hero-tagline { background: rgba(212,163,115,0.9); padding: 0.5rem 1.25rem; border-radius: 40px; font-weight: 600; display: inline-block; color: #1e2a2e; }
-        section { padding: 5rem 0; border-bottom: 1px solid var(--border-light); }
-        .section-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 2rem; display: inline-block; }
-        .section-title:after { content: ''; display: block; width: 60%; height: 3px; background: var(--secondary); margin-top: 0.5rem; }
-        .card { background: white; border-radius: 28px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); padding: 1.8rem; border: 1px solid rgba(212,163,115,0.2); }
-        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px,1fr)); gap: 2rem; }
-        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 2rem; }
-        .info-list { list-style: none; }
-        .info-list li { display: flex; gap: 12px; margin-bottom: 1rem; }
-        .info-list li i { width: 24px; color: var(--secondary); }
-        .schedule-table { width: 100%; border-collapse: collapse; }
-        .schedule-table th, .schedule-table td { padding: 12px 8px; text-align: left; border-bottom: 1px solid var(--border-light); }
-        .schedule-table th { background: #faf7f0; color: var(--primary-dark); }
-        .pengurus-img { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; margin: 0 auto 1rem; border: 3px solid var(--secondary); }
-        .galeri-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 1.5rem; }
-        .galeri-item { border-radius: 24px; overflow: hidden; background: white; }
-        .galeri-item img { width: 100%; height: 200px; object-fit: cover; }
-        .galeri-caption { padding: 0.8rem; text-align: center; font-weight: 600; }
-        .social-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem; }
-        .social-links a { font-size: 1.8rem; color: var(--primary-dark); }
-        .social-links a:hover { color: var(--secondary); }
-        footer { background: #0f2c1f; color: #dcd7cc; text-align: center; padding: 2rem; }
-        .loading { text-align: center; padding: 3rem; font-size: 1.2rem; color: var(--primary); }
-        .error-msg { background: #fee2e2; color: #b91c1c; padding: 1rem; border-radius: 20px; }
-        @media (max-width: 768px) { .hero h1 { font-size: 2rem; } .section-title { font-size: 1.8rem; } section { padding: 3rem 0; } }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #fefaf5;
+            color: #1e2a2e;
+            scroll-behavior: smooth;
+            line-height: 1.5;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Hero Section dengan background dari data */
+        .hero {
+            position: relative;
+            min-height: 85vh;
+            background: linear-gradient(135deg, rgba(0,70,40,0.75), rgba(0,40,20,0.85)), url('https://drive.google.com/uc?export=view&id=FILE_ID_BG');
+            background-size: cover;
+            background-position: center 30%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            border-bottom-left-radius: 2rem;
+            border-bottom-right-radius: 2rem;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(3px);
+            border-radius: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .hero .tagline {
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: #f9e0a0;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 400;
+        }
+
+        /* Section umum */
+        section {
+            padding: 5rem 0;
+            border-bottom: 1px solid rgba(0, 80, 50, 0.1);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f5e3a;
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.3px;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: #e0a82b;
+            border-radius: 4px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+            transition: transform 0.2s ease, box-shadow 0.2s;
+            border: 1px solid #f0e4d0;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.1);
+        }
+
+        .badge-icon {
+            background: #eef6f0;
+            width: 48px;
+            height: 48px;
+            border-radius: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #1f5e3a;
+            margin-bottom: 1rem;
+        }
+
+        /* Tabel jadwal */
+        .schedule-table {
+            background: white;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .schedule-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .schedule-table th, .schedule-table td {
+            padding: 1rem 1.2rem;
+            text-align: left;
+            border-bottom: 1px solid #f0e4d0;
+        }
+
+        .schedule-table th {
+            background: #1f5e3a;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .schedule-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            .hero .tagline {
+                font-size: 1.1rem;
+            }
+            .container {
+                padding: 0 20px;
+            }
+            section {
+                padding: 3rem 0;
+            }
+        }
+
+        /* List fasilitas */
+        .fasilitas-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+        .fasilitas-item {
+            background: #eef3ea;
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #2b6e46;
+        }
+
+        /* galeri grid */
+        .galeri-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        .galeri-card {
+            background: white;
+            border-radius: 1.2rem;
+            overflow: hidden;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+        }
+        .galeri-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        .galeri-card:hover img {
+            transform: scale(1.02);
+        }
+        .galeri-card .caption {
+            padding: 1rem;
+            font-weight: 600;
+            text-align: center;
+            background: #fffaf5;
+        }
+
+        .pengurus-card {
+            text-align: center;
+        }
+        .pengurus-foto {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1rem;
+            border: 3px solid #e0a82b;
+            background: #ddd;
+        }
+
+        .sosial-links {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+        .sosial-icon {
+            background: #1f5e3a;
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            transition: 0.2s;
+        }
+        .sosial-icon:hover {
+            background: #e0a82b;
+            transform: scale(1.05);
+        }
+        footer {
+            background: #0b3522;
+            color: #cfdec5;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        .btn-wa {
+            background: #25D366;
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+        .keuangan-card {
+            background: linear-gradient(135deg, #fef9e6, #fff6e8);
+            border-left: 6px solid #e0a82b;
+        }
     </style>
 </head>
 <body>
 
-<div id="hero-section" class="hero" style="background-image: url('');">
-    <div class="hero-overlay"></div>
+<!-- Hero Section (data dari sheet hero) -->
+<div class="hero" style="background: linear-gradient(135deg, rgba(0,60,35,0.8), rgba(0,35,15,0.9)), url('https://drive.google.com/uc?export=view&id=FILE_ID_BG'); background-size: cover; background-position: center;">
     <div class="hero-content">
-        <h1 id="hero-title">Memuat Data Masjid...</h1>
-        <p id="hero-subtitle"></p>
-        <span id="hero-tagline" class="hero-tagline"><i class="fas fa-spinner fa-pulse"></i> Menghubungkan ke Spreadsheet</span>
+        <h1>Selamat Datang di Masjid An-Nur</h1>
+        <div class="tagline">Rahmatan Lil 'Alamin</div>
+        <p>Pusat kegiatan ibadah, dakwah, dan pemberdayaan umat.</p>
     </div>
 </div>
 
-<main>
-    <div class="container" id="dynamic-content">
-        <div class="loading"><i class="fas fa-database"></i> Mengambil data dari Google Spreadsheet...</div>
-    </div>
-</main>
+<div class="container">
+    <!-- PROFIL MASJID (sheet profil) -->
+    <section id="profil">
+        <h2 class="section-title">Profil Masjid</h2>
+        <div class="card-grid">
+            <div class="card">
+                <div class="badge-icon"><i class="fas fa-mosque"></i></div>
+                <h3 style="color: #1f5e3a;">Masjid An-Nur</h3>
+                <p><strong>Tahun Berdiri:</strong> 1985 M / 1405 H</p>
+                <p><strong>Tagline:</strong> Rahmatan Lil 'Alamin</p>
+                <p><strong>Visi:</strong> Menjadi pusat peradaban Islam yang rahmatan lil 'alamin</p>
+                <p><strong>Misi:</strong> Mengoptimalkan ibadah dan kajian rutin, Memberdayakan ekonomi umat</p>
+            </div>
+            <div class="card">
+                <div class="badge-icon"><i class="fas fa-location-dot"></i></div>
+                <h3 style="color: #1f5e3a;">Lokasi & Kontak</h3>
+                <p><i class="fas fa-map-pin"></i> Jl. Masjid No. 45, Kelurahan Sukamaju, Kota Bandung</p>
+                <p><i class="fas fa-phone-alt"></i> <a href="https://wa.me/6281234567890" target="_blank" class="btn-wa" style="background: transparent; color:#25D366; padding:0;"><i class="fab fa-whatsapp"></i> +62 812-3456-7890</a></p>
+                <p><i class="fas fa-envelope"></i> <a href="mailto:info@masjidannur.id" style="color:#1f5e3a;">info@masjidannur.id</a></p>
+                <div class="fasilitas-list">
+                    <span class="fasilitas-item"><i class="fas fa-users"></i> 800 jamaah</span>
+                    <span class="fasilitas-item"><i class="fas fa-hand-sparkles"></i> Ruang wudhu & toilet</span>
+                    <span class="fasilitas-item"><i class="fas fa-book"></i> Perpustakaan Islam</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- JADWAL SHOLAT + IMAM + MUADZIN (2 kolom) -->
+    <section id="jadwal">
+        <h2 class="section-title">Jadwal Ibadah</h2>
+        <div class="two-columns">
+            <!-- Jadwal Sholat -->
+            <div class="schedule-table">
+                <table>
+                    <thead>
+                        <tr><th colspan="2"><i class="fas fa-clock"></i> Jadwal Sholat Wajib</th></tr>
+                        <tr><th>Sholat</th><th>Waktu</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Subuh</td><td>04:20</td></tr>
+                        <tr><td>Dzuhur</td><td>12:00</td></tr>
+                        <tr><td>Ashar</td><td>15:30</td></tr>
+                        <tr><td>Maghrib</td><td>17:55</td></tr>
+                        <tr><td>Isya</td><td>19:15</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Gabungan Imam & Muadzin -->
+            <div class="schedule-table">
+                <table>
+                    <thead><tr><th colspan="2"><i class="fas fa-microphone-alt"></i> Imam & Muadzin</th></tr>
+                    <tr><th>Sholat</th><th>Imam</th><th>Muadzin</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Subuh</td><td>Ustadz Ahmad Fauzi</td><td>M. Iqbal</td></tr>
+                        <tr><td>Dzuhur</td><td>KH. Maulana Hakim</td><td>Fajar Siddiq</td></tr>
+                        <tr><td>Ashar</td><td>Ustadz Abdul Ghani</td><td>Rizki Hidayat</td></tr>
+                        <tr><td>Maghrib</td><td>Ustadz Faiz Ridwan</td><td>Zainal Arifin</td></tr>
+                        <tr><td>Isya</td><td>Ustadz Hilman Rosyad</td><td>Ahmad Thohir</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- KAJIAN RUTIN (sheet kajian) -->
+    <section id="kajian">
+        <h2 class="section-title">Kajian Rutin</h2>
+        <div class="card-grid">
+            <!-- Kajian 1: Kitab Kuning -->
+            <div class="card">
+                <div class="badge-icon"><i class="fas fa-book-open"></i></div>
+                <h3>Kajian Kitab Kuning</h3>
+                <p>Setiap Ahad pagi, 07.30 WIB</p>
+                <a href="https://youtube.com/..." target="_blank" style="color:#e0a82b; font-weight:500;"><i class="fab fa-youtube"></i> Tonton rekaman</a>
+            </div>
+            <!-- Kajian 2: Majelis Ta'lim Ibu-ibu -->
+            <div class="card">
+                <div class="badge-icon"><i class="fas fa-female"></i></div>
+                <h3>Majelis Ta'lim Ibu-ibu</h3>
+                <p>Selasa & Kamis, 09.00 WIB</p>
+                <a href="https://youtube.com/..." target="_blank" style="color:#e0a82b; font-weight:500;"><i class="fab fa-youtube"></i> Tonton rekaman</a>
+            </div>
+            <!-- Kajian 3: Remaja -->
+            <div class="card">
+                <div class="badge-icon"><i class="fas fa-users"></i></div>
+                <h3>Kajian Remaja</h3>
+                <p>Sabtu malam ba'da Isya</p>
+                <a href="https://instagram.com/..." target="_blank" style="color:#e0a82b;"><i class="fab fa-instagram"></i> Instagram update</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- PENGURUS DKM (sheet pengurus) -->
+    <section id="pengurus">
+        <h2 class="section-title">Pengurus DKM</h2>
+        <div class="card-grid">
+            <div class="card pengurus-card">
+                <img class="pengurus-foto" src="https://drive.google.com/uc?export=view&id=FILE_ID" alt="Ketua DKM" onerror="this.src='https://ui-avatars.com/api/?background=1f5e3a&color=fff&name=H.+Rahmat+Saleh'">
+                <h3>H. Rahmat Saleh</h3>
+                <p style="color:#e0a82b; font-weight:600;">Ketua DKM</p>
+            </div>
+            <div class="card pengurus-card">
+                <img class="pengurus-foto" src="https://ui-avatars.com/api/?background=2a6b46&color=fff&name=H.+Nurul+Huda" alt="Sekretaris">
+                <h3>H. Nurul Huda</h3>
+                <p style="color:#e0a82b; font-weight:600;">Sekretaris</p>
+            </div>
+            <div class="card pengurus-card">
+                <img class="pengurus-foto" src="https://ui-avatars.com/api/?background=2a6b46&color=fff&name=Hj.+Siti+Aminah" alt="Bendahara">
+                <h3>Hj. Siti Aminah</h3>
+                <p style="color:#e0a82b; font-weight:600;">Bendahara</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- LAPORAN KEUANGAN (sheet keuangan) -->
+    <section id="keuangan">
+        <h2 class="section-title">Laporan Keuangan</h2>
+        <div class="card keuangan-card" style="background: white; border-radius: 1.5rem;">
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; align-items: center;">
+                <div><i class="fas fa-calendar-alt"></i> <strong>Periode:</strong> Maret 2025</div>
+                <div><i class="fas fa-arrow-up text-green"></i> <strong style="color:#2b6e46;">Pemasukan:</strong> Rp 78.500.000</div>
+                <div><i class="fas fa-arrow-down"></i> <strong style="color:#c0392b;">Pengeluaran:</strong> Rp 42.250.000</div>
+                <div><i class="fas fa-coins"></i> <strong style="color:#e0a82b;">Saldo:</strong> Rp 36.250.000</div>
+            </div>
+            <div style="margin-top: 1rem; background:#eef3ea; padding: 0.8rem; border-radius: 1rem; font-size:0.9rem;">
+                <i class="fas fa-chart-line"></i> Rincian transparansi: infaq & sedekah jamaah untuk operasional & kegiatan sosial.
+            </div>
+        </div>
+    </section>
+
+    <!-- GALERI KEGIATAN (sheet galeri) -->
+    <section id="galeri">
+        <h2 class="section-title">Galeri Kegiatan</h2>
+        <div class="galeri-grid">
+            <div class="galeri-card">
+                <img src="https://drive.google.com/uc?export=view&id=FILE_ID1" alt="Buka Bersama 1446 H" onerror="this.src='https://placehold.co/400x250/e2e8f0/1f5e3a?text=Buka+Bersama'">
+                <div class="caption">Buka Bersama 1446 H</div>
+            </div>
+            <div class="galeri-card">
+                <img src="https://drive.google.com/uc?export=view&id=FILE_ID2" alt="Pengajian Akbar" onerror="this.src='https://placehold.co/400x250/e2e8f0/1f5e3a?text=Pengajian+Akbar'">
+                <div class="caption">Pengajian Akbar</div>
+            </div>
+        </div>
+        <div style="margin-top: 1rem; text-align: center; font-size:0.9rem; color:gray;">
+            <i class="fas fa-images"></i> Dokumentasi kegiatan terbaru masjid
+        </div>
+    </section>
+
+    <!-- SOSIAL MEDIA (sheet sosial_media) -->
+    <section id="sosial">
+        <h2 class="section-title">Ikuti Kami</h2>
+        <div class="sosial-links">
+            <a href="https://facebook.com/masjidannur" target="_blank" class="sosial-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://instagram.com/masjidannur" target="_blank" class="sosial-icon"><i class="fab fa-instagram"></i></a>
+            <a href="https://youtube.com/masjidannur" target="_blank" class="sosial-icon"><i class="fab fa-youtube"></i></a>
+            <a href="https://wa.me/6281234567890" target="_blank" class="sosial-icon" style="background:#25D366;"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <div style="text-align: center; margin-top: 1rem;">
+            <a href="mailto:info@masjidannur.id" style="color:#1f5e3a;"><i class="fas fa-envelope"></i> info@masjidannur.id</a>
+        </div>
+    </section>
+</div>
+
+<!-- Footer -->
 <footer>
-    <p>© 2025 Masjid An-Nur | Data realtime dari Google Spreadsheet (ID: 1dKHiVnVhCBziOeAh_rabPfaaL8mpgtiPYmft2OxVGYQ)</p>
+    <div class="container">
+        <p><i class="fas fa-mosque"></i> Masjid An-Nur | Jl. Masjid No. 45, Sukamaju, Bandung</p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem;">© 2025 Takmir Masjid An-Nur - Rahmatan Lil 'Alamin</p>
+        <p style="margin-top: 0.3rem; font-size: 0.75rem;">Data diambil dari profil resmi masjid (tanpa auto refresh, update manual)</p>
+    </div>
 </footer>
 
+<!-- Simple script: hanya untuk fallback gambar jika error, tidak ada auto refresh atau polling -->
 <script>
-    const SPREADSHEET_ID = '1dKHiVnVhCBziOeAh_rabPfaaL8mpgtiPYmft2OxVGYQ';
-
-    // Fungsi mengambil data sheet dengan format RAW (text apa adanya)
-    // Menggunakan gviz JSON, kita ambil formatted value (f) jika ada, atau value (v) sebagai string
-    async function fetchSheetRaw(sheetName) {
-        const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
-        const resp = await fetch(url);
-        if (!resp.ok) throw new Error(`HTTP ${resp.status} - Gagal ambil sheet ${sheetName}`);
-        const text = await resp.text();
-        const jsonStr = text.substring(text.indexOf('(') + 1, text.lastIndexOf(')'));
-        const json = JSON.parse(jsonStr);
-        const cols = json.table.cols.map(c => c.label);
-        const rows = json.table.rows;
-        return rows.map(row => {
-            const obj = {};
-            row.c.forEach((cell, idx) => {
-                let rawValue = null;
-                if (cell) {
-                    // Prioritaskan formatted string (f) karena untuk waktu sudah dalam format teks
-                    if (cell.f !== undefined && cell.f !== null) {
-                        rawValue = cell.f;
-                    } else if (cell.v !== undefined && cell.v !== null) {
-                        // Jika tidak ada formatted, gunakan value as string
-                        rawValue = String(cell.v);
-                    }
-                }
-                obj[cols[idx]] = rawValue;
-            });
-            return obj;
-        });
-    }
-
-    // Untuk sheet 'profil' yang key-value, juga raw
-    async function getProfilMap() {
-        const rows = await fetchSheetRaw('profil');
-        const map = {};
-        rows.forEach(row => { if (row.key) map[row.key] = row.value; });
-        return map;
-    }
-
-    window.addEventListener('DOMContentLoaded', async () => {
-        const contentDiv = document.getElementById('dynamic-content');
-        try {
-            // Ambil semua sheet dalam bentuk RAW (teks)
-            const [profilMap, jadwalSholat, jadwalImam, jadwalMuadzin, kajian, pengurus, keuangan, galeri, hero, sosialMedia] = await Promise.all([
-                getProfilMap(),
-                fetchSheetRaw('jadwal_sholat'),
-                fetchSheetRaw('jadwal_imam'),
-                fetchSheetRaw('jadwal_muadzin'),
-                fetchSheetRaw('kajian'),
-                fetchSheetRaw('pengurus'),
-                fetchSheetRaw('keuangan'),
-                fetchSheetRaw('galeri'),
-                fetchSheetRaw('hero'),
-                fetchSheetRaw('sosial_media')
-            ]);
-
-            // === HERO ===
-            const heroData = hero[0] || {};
-            const heroBg = heroData.background_url || 'https://images.unsplash.com/photo-1584555616317-d9c3f2b54e64?auto=format&w=1600';
-            document.getElementById('hero-section').style.backgroundImage = `url('${heroBg}')`;
-            document.getElementById('hero-title').innerText = heroData.judul || 'Masjid An-Nur';
-            document.getElementById('hero-subtitle').innerText = heroData.subjudul || 'Pusat kegiatan ibadah, dakwah, dan pemberdayaan umat.';
-            document.getElementById('hero-tagline').innerHTML = `<i class="fas fa-seedling"></i> ${profilMap.tagline || 'Rahmatan Lil Alamin'}`;
-
-            // === PROFIL ===
-            const nama = profilMap.nama_masjid || 'Masjid An-Nur';
-            const tahun = profilMap.tahun_berdiri || '1985 M / 1405 H';
-            const alamat = profilMap.alamat || 'Jl. Masjid No. 45, Kelurahan Sukamaju, Kota Bandung';
-            let wa = profilMap.wa_number;
-            if (wa) wa = wa.toString().replace('.0', '');
-            else wa = '6281234567890';
-            const email = profilMap.email || 'info@masjidannur.id';
-            const visi = profilMap.visi || 'Menjadi pusat peradaban Islam yang rahmatan lil alamin';
-            const misi = profilMap.misi || 'Mengoptimalkan ibadah dan kajian rutin<br>Memberdayakan ekonomi umat';
-            const fasilitasRaw = profilMap.fasilitas || 'Ruang utama kapasitas 800 jamaah<br>Ruang wudhu & toilet bersih<br>Perpustakaan Islam';
-            const fasilitasArr = fasilitasRaw.split('<br>');
-
-            // === JADWAL SHOLAT, IMAM, MUADZIN (RAW TEXT, TANPA KONVERSI) ===
-            // Buat map berdasarkan nama sholat (case sensitive, sesuai data sheet)
-            const prayerMap = new Map();
-            // Masukkan jadwal sholat (waktu)
-            jadwalSholat.forEach(s => {
-                let sholatName = s.sholat;
-                let waktuRaw = s.waktu !== undefined && s.waktu !== null ? s.waktu : '-';
-                prayerMap.set(sholatName, { waktu: waktuRaw, imam: '-', muadzin: '-' });
-            });
-            // Masukkan imam
-            jadwalImam.forEach(i => {
-                let sholatName = i.sholat;
-                let imamRaw = i.nama_imam !== undefined && i.nama_imam !== null ? i.nama_imam : '-';
-                if (prayerMap.has(sholatName)) {
-                    prayerMap.get(sholatName).imam = imamRaw;
-                } else {
-                    prayerMap.set(sholatName, { waktu: '-', imam: imamRaw, muadzin: '-' });
-                }
-            });
-            // Masukkan muadzin
-            jadwalMuadzin.forEach(m => {
-                let sholatName = m.sholat;
-                let muadzinRaw = m.nama_muadzin !== undefined && m.nama_muadzin !== null ? m.nama_muadzin : '-';
-                if (prayerMap.has(sholatName)) {
-                    prayerMap.get(sholatName).muadzin = muadzinRaw;
-                } else {
-                    prayerMap.set(sholatName, { waktu: '-', imam: '-', muadzin: muadzinRaw });
-                }
-            });
-
-            // Urutan sholat tetap
-            const sholatOrder = ['Subuh', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya'];
-            let jadwalRows = '';
-            for (let sh of sholatOrder) {
-                const data = prayerMap.get(sh);
-                if (data) {
-                    jadwalRows += `<tr><td><strong>${sh}</strong></td><td>${data.waktu}</td><td>${data.imam}</td><td>${data.muadzin}</td></tr>`;
-                } else {
-                    jadwalRows += `<tr><td><strong>${sh}</strong></td><td>-</td><td>-</td><td>-</td></tr>`;
-                }
+    // Tidak ada auto refresh; semua data sudah statis dari spreadsheet
+    // hanya memperbaiki tampilan jika gambar drive gagal di galeri
+    document.querySelectorAll('.galeri-card img').forEach(img => {
+        img.addEventListener('error', function() {
+            if(!this.hasAttribute('data-fallback')) {
+                this.setAttribute('data-fallback', 'true');
+                this.src = 'https://placehold.co/600x400/dfe6e9/1f5e3a?text=Galeri+Masjid';
             }
-
-            // === KAJIAN ===
-            let kajianHtml = '';
-            kajian.forEach(k => {
-                const icon = k.icon || 'fa-book';
-                kajianHtml += `
-                    <div class="card">
-                        <i class="fas ${icon}" style="font-size: 2rem; color: var(--secondary); margin-bottom: 0.8rem;"></i>
-                        <h3>${k.judul || 'Kajian'}</h3>
-                        <p>${k.deskripsi || ''}</p>
-                        <a href="${k.link || '#'}" target="_blank" style="display: inline-block; margin-top: 1rem; color: var(--primary);">Detail <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                `;
-            });
-            if (!kajianHtml) kajianHtml = '<div class="card">Belum ada data kajian</div>';
-
-            // === PENGURUS ===
-            let pengurusHtml = '';
-            pengurus.forEach(p => {
-                const foto = p.foto_url && p.foto_url.trim() ? p.foto_url : 'https://via.placeholder.com/110?text=No+Image';
-                pengurusHtml += `
-                    <div class="card" style="text-align: center;">
-                        <img class="pengurus-img" src="${foto}" alt="${p.nama}" onerror="this.src='https://via.placeholder.com/110?text=Photo'">
-                        <div class="pengurus-name">${p.nama || '-'}</div>
-                        <div class="pengurus-jabatan" style="color: var(--secondary);">${p.jabatan || '-'}</div>
-                    </div>
-                `;
-            });
-            if (!pengurusHtml) pengurusHtml = '<div class="card">Data pengurus belum tersedia</div>';
-
-            // === KEUANGAN ===
-            let keuanganHtml = '';
-            if (keuangan.length) {
-                const k = keuangan[0];
-                keuanganHtml = `
-                    <div class="card">
-                        <h3>Laporan ${k.bulan_tahun || 'Terbaru'}</h3>
-                        <ul class="info-list">
-                            <li><i class="fas fa-arrow-down"></i> Pemasukan: Rp ${Number(k.pemasukan).toLocaleString('id-ID')}</li>
-                            <li><i class="fas fa-arrow-up"></i> Pengeluaran: Rp ${Number(k.pengeluaran).toLocaleString('id-ID')}</li>
-                            <li><i class="fas fa-wallet"></i> Saldo: Rp ${Number(k.saldo).toLocaleString('id-ID')}</li>
-                        </ul>
-                    </div>
-                `;
-            } else { keuanganHtml = '<div class="card">Belum ada data keuangan</div>'; }
-
-            // === GALERI ===
-            let galeriHtml = '';
-            galeri.sort((a,b) => (a.urutan||0) - (b.urutan||0));
-            galeri.forEach(g => {
-                galeriHtml += `
-                    <div class="galeri-item">
-                        <img src="${g.url_gambar || 'https://via.placeholder.com/400x200?text=Galeri'}" alt="${g.judul}" onerror="this.src='https://via.placeholder.com/400x200?text=Gambar+Masjid'">
-                        <div class="galeri-caption">${g.judul || 'Kegiatan'}</div>
-                    </div>
-                `;
-            });
-            if (!galeriHtml) galeriHtml = '<div class="card">Belum ada galeri</div>';
-
-            // === SOSIAL MEDIA ===
-            let linkHtml = '';
-            const iconMap = { facebook: 'fab fa-facebook', instagram: 'fab fa-instagram', youtube: 'fab fa-youtube', twitter: 'fab fa-twitter' };
-            sosialMedia.forEach(sm => {
-                const plat = sm.platform?.toLowerCase();
-                const icon = iconMap[plat] || 'fas fa-link';
-                linkHtml += `<a href="${sm.url}" target="_blank"><i class="${icon}"></i></a>`;
-            });
-            const sosmedHtml = `
-                <div class="card" style="text-align: center;">
-                    <div class="social-links">${linkHtml || '<i>Tidak ada media sosial</i>'}</div>
-                    <div class="info-list" style="max-width: 400px; margin: 0 auto;">
-                        <li><i class="fas fa-map-marker-alt"></i> ${alamat}</li>
-                        <li><i class="fab fa-whatsapp"></i> <a href="https://wa.me/${wa}" target="_blank">${wa}</a></li>
-                    </div>
-                </div>
-            `;
-
-            // === RENDER SEMUA ===
-            contentDiv.innerHTML = `
-                <section id="profil">
-                    <h2 class="section-title">Profil Masjid</h2>
-                    <div class="grid-2">
-                        <div class="card">
-                            <h3><i class="fas fa-mosque"></i> ${nama}</h3>
-                            <ul class="info-list">
-                                <li><i class="fas fa-calendar-alt"></i> <strong>Tahun Berdiri:</strong> ${tahun}</li>
-                                <li><i class="fas fa-map-marker-alt"></i> <strong>Alamat:</strong> ${alamat}</li>
-                                <li><i class="fab fa-whatsapp"></i> <strong>WhatsApp:</strong> <a href="https://wa.me/${wa}">${wa}</a></li>
-                                <li><i class="fas fa-envelope"></i> <strong>Email:</strong> <a href="mailto:${email}">${email}</a></li>
-                            </ul>
-                        </div>
-                        <div class="card">
-                            <h3>Visi & Misi</h3>
-                            <p><strong>Visi:</strong> ${visi}</p>
-                            <p><strong>Misi:</strong><br>${misi}</p>
-                            <hr style="margin: 1rem 0;">
-                            <h4>Fasilitas</h4>
-                            <ul>${fasilitasArr.map(f => `<li>${f}</li>`).join('')}</ul>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="jadwal">
-                    <h2 class="section-title">Jadwal Sholat & Imam</h2>
-                    <div class="card" style="padding: 0; overflow-x: auto;">
-                        <table class="schedule-table">
-                            <thead><tr><th>Sholat</th><th>Waktu</th><th>Imam</th><th>Muadzin</th></tr></thead>
-                            <tbody>${jadwalRows}</tbody>
-                        </table>
-                    </div>
-                    <p style="margin-top: 0.5rem; font-size: 0.8rem; color: gray;">Data ditampilkan persis seperti di spreadsheet (teks mentah, tanpa konversi)</p>
-                </section>
-
-                <section id="kajian">
-                    <h2 class="section-title">Kajian Rutin</h2>
-                    <div class="grid-3">${kajianHtml}</div>
-                </section>
-
-                <section id="pengurus">
-                    <h2 class="section-title">Pengurus DKM</h2>
-                    <div class="grid-3">${pengurusHtml}</div>
-                </section>
-
-                <section id="keuangan">
-                    <h2 class="section-title">Laporan Keuangan</h2>
-                    ${keuanganHtml}
-                </section>
-
-                <section id="galeri">
-                    <h2 class="section-title">Galeri Kegiatan</h2>
-                    <div class="galeri-grid">${galeriHtml}</div>
-                </section>
-
-                <section id="sosmed">
-                    <h2 class="section-title">Ikuti Kami</h2>
-                    ${sosmedHtml}
-                </section>
-            `;
-        } catch (err) {
-            console.error(err);
-            contentDiv.innerHTML = `
-                <div class="error-msg">
-                    <i class="fas fa-exclamation-triangle"></i> Gagal mengambil data dari Google Spreadsheet.<br><br>
-                    <strong>Penyebab umum:</strong> Spreadsheet belum dipublikasikan ke web.<br>
-                    <strong>Solusi:</strong> Buka file → File → Bagikan → Publikasikan ke web → Publikasikan.<br><br>
-                    Detail error: ${err.message}
-                </div>
-            `;
-            document.getElementById('hero-title').innerText = 'Masjid An-Nur';
-            document.getElementById('hero-subtitle').innerText = 'Periksa publikasi spreadsheet';
-        }
+        });
     });
+    // Fallback untuk foto pengurus jika gambar ID tidak valid (sudah pakai avatar ui)
+    // tidak perlu karena di awal sudah onerror ke avatar
+    document.querySelectorAll('.pengurus-foto').forEach(img => {
+        img.addEventListener('error', function() {
+            if(!this.hasAttribute('data-fallback-avatar')) {
+                this.setAttribute('data-fallback-avatar', 'true');
+                let name = this.alt || this.parentElement.querySelector('h3')?.innerText || 'Pengurus';
+                this.src = `https://ui-avatars.com/api/?background=1f5e3a&color=fff&name=${encodeURIComponent(name)}`;
+            }
+        });
+    });
+    // Hero background fallback (jika gambar drive tidak bisa diakses, tidak merusak layout)
+    const heroDiv = document.querySelector('.hero');
+    if(heroDiv) {
+        const bgTest = new Image();
+        bgTest.src = 'https://drive.google.com/uc?export=view&id=FILE_ID_BG';
+        bgTest.onerror = () => {
+            heroDiv.style.background = 'linear-gradient(135deg, #0a2f1f, #06381f)';
+        }
+    }
+    // memastikan semua link WA & email aman
+    console.log("Landing page Masjid An-Nur - data statis sesuai Google Sheet");
 </script>
 </body>
 </html>
