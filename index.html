@@ -9,7 +9,6 @@
   <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    /* Font sistem standar (tidak pakai Google Fonts) */
     body {
       font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       scroll-behavior: smooth;
@@ -60,9 +59,16 @@
   <!-- Main Content -->
   <div id="main-content" class="hidden opacity-0 transition-opacity duration-500">
     
-    <!-- HERO SECTION - Overlay sangat tipis (alpha 0.2) -->
+    <!-- HERO SECTION - Overlay sangat tipis, dengan logo di atas judul -->
     <header id="hero-section" class="relative overflow-hidden shadow-lg bg-cover bg-center bg-no-repeat" style="background-image: linear-gradient(135deg, rgba(10,46,56,0.2), rgba(11,79,60,0.2)), url('');">
       <div class="container mx-auto px-6 py-16 md:py-24 relative z-10 text-center text-white">
+        <!-- Logo Masjid (dinamis dari sheet profil) -->
+        <div id="logo-container" class="flex justify-center mb-6">
+          <div id="logo-default" class="w-20 h-20 bg-gold-text/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+            <i class="fas fa-mosque text-4xl text-amber-300"></i>
+          </div>
+          <img id="logo-img" class="hidden w-20 h-20 md:w-24 md:h-24 object-contain rounded-full shadow-lg" alt="Logo Masjid">
+        </div>
         <h1 id="hero-judul" class="text-4xl md:text-6xl font-bold arabic-font">Masjid Nur</h1>
         <p id="hero-subjudul" class="text-xl md:text-2xl mt-3 opacity-90">Rahmatan Lil Alamin</p>
         <div class="mt-8 flex flex-wrap gap-4 justify-center">
@@ -216,14 +222,13 @@
     function getGoogleDriveImageUrl(driveUrl) {
       if (!driveUrl) return '';
       if (driveUrl.includes('thumbnail')) return driveUrl;
-      // Ekstrak ID dari berbagai format
       let match = driveUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
       if (match && match[1]) {
-        return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1920`;
+        return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`;
       }
       match = driveUrl.match(/id=([a-zA-Z0-9_-]+)/);
       if (match && match[1]) {
-        return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1920`;
+        return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`;
       }
       return driveUrl;
     }
@@ -308,6 +313,25 @@
           fetchCSVAsArray(getCsvUrl(SHEET_SOSMED_GID), true)
         ]);
 
+        // ========== LOGO dari sheet profil ==========
+        const logoUrlRaw = profilMap.get('logo_url') || '';
+        const logoUrl = logoUrlRaw ? getGoogleDriveImageUrl(logoUrlRaw) : '';
+        const logoDefault = document.getElementById('logo-default');
+        const logoImg = document.getElementById('logo-img');
+        if (logoUrl) {
+          logoDefault.classList.add('hidden');
+          logoImg.classList.remove('hidden');
+          logoImg.src = logoUrl;
+          logoImg.alt = 'Logo Masjid';
+          logoImg.onerror = () => {
+            logoImg.classList.add('hidden');
+            logoDefault.classList.remove('hidden');
+          };
+        } else {
+          logoDefault.classList.remove('hidden');
+          logoImg.classList.add('hidden');
+        }
+
         // ========== HERO dengan overlay tipis ==========
         if (heroArr && heroArr.length) {
           const hero = heroArr[0];
@@ -317,18 +341,15 @@
           const subjudulHero = hero.subjudul || 'Rahmatan Lil Alamin';
           const heroSection = document.getElementById('hero-section');
           if (bgUrl) {
-            // Overlay hijau dengan alpha 0.2 (sangat tipis)
             heroSection.style.backgroundImage = `linear-gradient(135deg, rgba(10,46,56,0.2), rgba(11,79,60,0.2)), url('${bgUrl}')`;
             heroSection.style.backgroundSize = 'cover';
             heroSection.style.backgroundPosition = 'center';
           } else {
-            // fallback gradient tanpa gambar
             heroSection.style.backgroundImage = `linear-gradient(135deg, #0a2e38, #0b4f3c)`;
           }
           document.getElementById('hero-judul').innerText = judulHero;
           document.getElementById('hero-subjudul').innerText = subjudulHero;
         } else {
-          // jika tidak ada data hero, gunakan gradient default tanpa gambar
           document.getElementById('hero-section').style.backgroundImage = `linear-gradient(135deg, #0a2e38, #0b4f3c)`;
         }
 
