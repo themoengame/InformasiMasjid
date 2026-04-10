@@ -52,17 +52,17 @@
   <!-- Loading Screen -->
   <div id="loading-screen" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center">
     <div class="loading-spinner mb-5"></div>
-    <p class="text-gray-600 font-medium">Mengambil data ...</p>
+    <p class="text-gray-600 font-medium">Mengambil data...</p>
     <p class="text-sm text-gray-400 mt-2">Profil, jadwal, kajian, pengurus, galeri, keuangan</p>
   </div>
 
   <!-- Main Content -->
   <div id="main-content" class="hidden opacity-0 transition-opacity duration-500">
     
-    <!-- HERO SECTION - Overlay sangat tipis, dengan logo di atas judul -->
+    <!-- HERO SECTION - Overlay sangat tipis, tombol seragam -->
     <header id="hero-section" class="relative overflow-hidden shadow-lg bg-cover bg-center bg-no-repeat" style="background-image: linear-gradient(135deg, rgba(10,46,56,0.2), rgba(11,79,60,0.2)), url('');">
       <div class="container mx-auto px-6 py-16 md:py-24 relative z-10 text-center text-white">
-        <!-- Logo Masjid (dinamis dari sheet profil) -->
+        <!-- Logo Masjid -->
         <div id="logo-container" class="flex justify-center mb-6">
           <div id="logo-default" class="w-20 h-20 bg-gold-text/20 rounded-full flex items-center justify-center backdrop-blur-sm">
             <i class="fas fa-mosque text-4xl text-amber-300"></i>
@@ -72,11 +72,12 @@
         <h1 id="hero-judul" class="text-4xl md:text-6xl font-bold arabic-font">Masjid Nur</h1>
         <p id="hero-subjudul" class="text-xl md:text-2xl mt-3 opacity-90">Rahmatan Lil Alamin</p>
         <div class="mt-8 flex flex-wrap gap-4 justify-center">
-          <a href="#profil" class="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-full px-6 py-2 transition"><i class="fas fa-landmark mr-2"></i> Profil</a>
-          <a href="#jadwal" class="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-full px-6 py-2 transition"><i class="fas fa-clock mr-2"></i> Jadwal</a>
-          <a href="#kajian" class="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-full px-6 py-2 transition"><i class="fas fa-book-open mr-2"></i> Kajian</a>
-          <a href="#pengurus" class="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-full px-6 py-2 transition"><i class="fas fa-users mr-2"></i> Pengurus</a>
-          <a href="#" id="wa-hero-btn" target="_blank" class="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-full px-6 py-2 transition"><i class="fab fa-whatsapp mr-2"></i> Hubungi</a>
+          <!-- Semua tombol menggunakan gaya yang sama -->
+          <a href="#profil" class="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-full px-6 py-2 transition flex items-center gap-2"><i class="fas fa-landmark"></i> Profil</a>
+          <a href="#jadwal" class="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-full px-6 py-2 transition flex items-center gap-2"><i class="fas fa-clock"></i> Jadwal</a>
+          <a href="#kajian" class="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-full px-6 py-2 transition flex items-center gap-2"><i class="fas fa-book-open"></i> Kajian</a>
+          <a href="#pengurus" class="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-full px-6 py-2 transition flex items-center gap-2"><i class="fas fa-users"></i> Pengurus</a>
+          <a href="#" id="wa-hero-btn" target="_blank" class="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-full px-6 py-2 transition flex items-center gap-2"><i class="fab fa-whatsapp"></i> Hubungi</a>
         </div>
       </div>
       <div class="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-gray-50 to-transparent"></div>
@@ -218,7 +219,6 @@
       return `${SPREADSHEET_PUBLIC_URL}${gid}&_=${Date.now()}`;
     }
 
-    // Helper untuk mengubah URL Google Drive ke thumbnail (stabil & cepat)
     function getGoogleDriveImageUrl(driveUrl) {
       if (!driveUrl) return '';
       if (driveUrl.includes('thumbnail')) return driveUrl;
@@ -233,7 +233,6 @@
       return driveUrl;
     }
 
-    // Fetch CSV dengan header
     async function fetchCSVAsArray(url, hasHeader = true) {
       try {
         const response = await fetch(url, { cache: 'no-store' });
@@ -291,7 +290,6 @@
       return dataMap;
     }
 
-    // Lightbox
     function openLightbox(url) {
       document.getElementById('lightbox-img').src = url;
       document.getElementById('lightbox').classList.add('active');
@@ -313,7 +311,7 @@
           fetchCSVAsArray(getCsvUrl(SHEET_SOSMED_GID), true)
         ]);
 
-        // ========== LOGO dari sheet profil ==========
+        // LOGO
         const logoUrlRaw = profilMap.get('logo_url') || '';
         const logoUrl = logoUrlRaw ? getGoogleDriveImageUrl(logoUrlRaw) : '';
         const logoDefault = document.getElementById('logo-default');
@@ -332,7 +330,7 @@
           logoImg.classList.add('hidden');
         }
 
-        // ========== HERO dengan overlay tipis ==========
+        // HERO
         if (heroArr && heroArr.length) {
           const hero = heroArr[0];
           let bgUrl = hero.background_url || '';
@@ -353,7 +351,7 @@
           document.getElementById('hero-section').style.backgroundImage = `linear-gradient(135deg, #0a2e38, #0b4f3c)`;
         }
 
-        // ========== PROFIL ==========
+        // PROFIL
         const nama = profilMap.get('nama_masjid') || 'Masjid Nur';
         const tagline = profilMap.get('tagline') || 'Rahmatan Lil Alamin';
         const visi = profilMap.get('visi') || 'Menjadi pusat peradaban Islam';
@@ -397,7 +395,7 @@
           fasGrid.appendChild(div);
         });
 
-        // Kontak WA & Email
+        // Kontak
         const cleanWa = wa.replace(/\D/g, '');
         const waUrl = `https://wa.me/${cleanWa.startsWith('62') ? cleanWa : '62' + cleanWa}`;
         document.getElementById('wa-number-link').href = waUrl;
@@ -409,7 +407,7 @@
         document.getElementById('email-link').innerText = email;
         document.getElementById('maps-link').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(alamat)}`;
 
-        // ========== JADWAL ==========
+        // Jadwal
         const sholatMap = new Map(); jadwalSholatArr.forEach(i => i.sholat && i.waktu && sholatMap.set(i.sholat.toLowerCase(), i.waktu));
         const imamMap = new Map(); jadwalImamArr.forEach(i => i.sholat && i.nama_imam && imamMap.set(i.sholat.toLowerCase(), i.nama_imam));
         const muadzinMap = new Map(); jadwalMuadzinArr.forEach(i => i.sholat && i.nama_muadzin && muadzinMap.set(i.sholat.toLowerCase(), i.nama_muadzin));
@@ -424,7 +422,7 @@
           tbody.insertAdjacentHTML('beforeend', row);
         }
 
-        // ========== KAJIAN ==========
+        // Kajian
         const kajianGrid = document.getElementById('kajian-grid');
         kajianGrid.innerHTML = '';
         if (kajianArr.length) {
@@ -438,7 +436,7 @@
           });
         } else { kajianGrid.innerHTML = '<div class="col-span-full text-center text-gray-500">Belum ada data kajian</div>'; }
 
-        // ========== PENGURUS ==========
+        // Pengurus
         const pengurusGrid = document.getElementById('pengurus-grid');
         pengurusGrid.innerHTML = '';
         if (pengurusArr.length) {
@@ -455,7 +453,7 @@
           });
         } else { pengurusGrid.innerHTML = '<div class="col-span-full text-center text-gray-500">Data pengurus belum tersedia</div>'; }
 
-        // ========== KEUANGAN ==========
+        // Keuangan
         const keuanganTbody = document.getElementById('keuangan-tbody');
         keuanganTbody.innerHTML = '';
         if (keuanganArr.length) {
@@ -469,7 +467,7 @@
           });
         } else { keuanganTbody.innerHTML = '<tr><td colspan="4" class="text-center py-6">Belum ada laporan keuangan</td></tr>'; }
 
-        // ========== GALERI ==========
+        // Galeri
         const galeriGrid = document.getElementById('galeri-grid');
         galeriGrid.innerHTML = '';
         if (galeriArr.length) {
@@ -484,7 +482,7 @@
           });
         } else { galeriGrid.innerHTML = '<div class="col-span-full text-center text-gray-500">Belum ada foto galeri</div>'; }
 
-        // ========== SOSIAL MEDIA ==========
+        // Sosial Media
         const socialContainer = document.getElementById('social-icons');
         socialContainer.innerHTML = '';
         const platformIcons = { facebook: 'fab fa-facebook', instagram: 'fab fa-instagram', youtube: 'fab fa-youtube', twitter: 'fab fa-twitter', tiktok: 'fab fa-tiktok', whatsapp: 'fab fa-whatsapp' };
@@ -500,7 +498,7 @@
           socialContainer.innerHTML = '<span class="text-gray-500 text-sm">Media sosial belum ditambahkan</span>';
         }
 
-        // Selesai loading
+        // Selesai
         const loading = document.getElementById('loading-screen');
         const main = document.getElementById('main-content');
         loading.style.opacity = '0';
