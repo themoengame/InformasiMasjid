@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title id="page-title">Memuat data masjid...</title>
-  <!-- Tailwind CSS CDN versi stabil (resmi) -->
+  <!-- Tailwind CSS versi stabil -->
   <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-  <!-- Font Awesome 6 (stabil) -->
+  <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    /* Fallback font system (tanpa Google Fonts) */
+    /* Font sistem standar (tidak pakai Google Fonts) */
     body {
       font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       scroll-behavior: smooth;
@@ -39,7 +39,6 @@
     }
     .lightbox img { max-width: 90%; max-height: 90%; border-radius: 8px; }
     .lightbox.active { display: flex; }
-    /* Custom style for list bullet */
     .bullet-item { position: relative; padding-left: 1.5rem; }
     .bullet-item:before { content: "•"; color: #eab308; position: absolute; left: 0; top: 0; }
   </style>
@@ -61,9 +60,8 @@
   <!-- Main Content -->
   <div id="main-content" class="hidden opacity-0 transition-opacity duration-500">
     
-    <!-- Hero Section (dinamis) -->
-    <header id="hero-section" class="relative overflow-hidden shadow-lg bg-cover bg-center bg-no-repeat" style="background-image: linear-gradient(135deg, #0a2e38 0%, #0b4f3c 100%);">
-      <div class="absolute inset-0 bg-black/40"></div>
+    <!-- HERO SECTION - Overlay sangat tipis (alpha 0.2) -->
+    <header id="hero-section" class="relative overflow-hidden shadow-lg bg-cover bg-center bg-no-repeat" style="background-image: linear-gradient(135deg, rgba(10,46,56,0.2), rgba(11,79,60,0.2)), url('');">
       <div class="container mx-auto px-6 py-16 md:py-24 relative z-10 text-center text-white">
         <h1 id="hero-judul" class="text-4xl md:text-6xl font-bold arabic-font">Masjid Nur</h1>
         <p id="hero-subjudul" class="text-xl md:text-2xl mt-3 opacity-90">Rahmatan Lil Alamin</p>
@@ -80,7 +78,7 @@
 
     <main class="container mx-auto px-6 py-12 md:py-16">
       
-      <!-- PROFIL (URUTAN BARU: Tahun Berdiri, Visi, Misi, Fasilitas) -->
+      <!-- PROFIL (Urutan: Tahun Berdiri, Visi, Misi, Fasilitas) -->
       <div id="profil" class="space-y-8 mb-16">
         <div class="bg-gradient-to-br from-emerald-50 to-white rounded-2xl shadow-lg p-6 card-hover">
           <div class="flex items-center gap-2 text-emerald-800 border-b border-emerald-200 pb-3 mb-4">
@@ -126,7 +124,7 @@
         </div>
       </div>
 
-      <!-- KAJIAN -->
+      <!-- KAJIAN & PROGRAM RUTIN -->
       <div id="kajian" class="mt-20 mb-20">
         <div class="text-center mb-10">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-800 inline-block border-b-4 border-gold-text pb-2">Kajian & Program Rutin</h2>
@@ -198,9 +196,7 @@
 
   <script>
     // ==================== KONFIGURASI URL ====================
-    // Gunakan ID spreadsheet yang sama, dengan parameter gid
     const SPREADSHEET_PUBLIC_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSTNjYH7HJ5Raf59LRfIiHQLMPWmFAiXUQqzrup4Tc6PuPxUQGyIAgcdBM5lWubSEhWgy3DIeU3P_Pq/pub?output=csv&gid=';
-
     const SHEET_MAIN_GID = '0';
     const SHEET_SHOLAT_GID = '30146558';
     const SHEET_IMAM_GID = '25606937';
@@ -216,7 +212,23 @@
       return `${SPREADSHEET_PUBLIC_URL}${gid}&_=${Date.now()}`;
     }
 
-    // Helper fetch CSV dengan header
+    // Helper untuk mengubah URL Google Drive ke thumbnail (stabil & cepat)
+    function getGoogleDriveImageUrl(driveUrl) {
+      if (!driveUrl) return '';
+      if (driveUrl.includes('thumbnail')) return driveUrl;
+      // Ekstrak ID dari berbagai format
+      let match = driveUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) {
+        return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1920`;
+      }
+      match = driveUrl.match(/id=([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) {
+        return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1920`;
+      }
+      return driveUrl;
+    }
+
+    // Fetch CSV dengan header
     async function fetchCSVAsArray(url, hasHeader = true) {
       try {
         const response = await fetch(url, { cache: 'no-store' });
@@ -274,29 +286,10 @@
       return dataMap;
     }
 
-    // Helper untuk mendapatkan URL gambar Google Drive yang stabil (thumbnail)
-    function getGoogleDriveImageUrl(driveUrl) {
-      if (!driveUrl) return '';
-      // Jika sudah berupa URL langsung dengan uc?export=view
-      if (driveUrl.includes('uc?export=view') || driveUrl.includes('thumbnail')) return driveUrl;
-      // Coba ekstrak ID dari berbagai format
-      let match = driveUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
-      if (match && match[1]) {
-        return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800`;
-      }
-      match = driveUrl.match(/id=([a-zA-Z0-9_-]+)/);
-      if (match && match[1]) {
-        return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800`;
-      }
-      return driveUrl;
-    }
-
     // Lightbox
     function openLightbox(url) {
-      const lb = document.getElementById('lightbox');
-      const img = document.getElementById('lightbox-img');
-      img.src = url;
-      lb.classList.add('active');
+      document.getElementById('lightbox-img').src = url;
+      document.getElementById('lightbox').classList.add('active');
     }
     window.closeLightbox = function() { document.getElementById('lightbox').classList.remove('active'); };
 
@@ -315,7 +308,7 @@
           fetchCSVAsArray(getCsvUrl(SHEET_SOSMED_GID), true)
         ]);
 
-        // Hero
+        // ========== HERO dengan overlay tipis ==========
         if (heroArr && heroArr.length) {
           const hero = heroArr[0];
           let bgUrl = hero.background_url || '';
@@ -324,15 +317,22 @@
           const subjudulHero = hero.subjudul || 'Rahmatan Lil Alamin';
           const heroSection = document.getElementById('hero-section');
           if (bgUrl) {
-            heroSection.style.backgroundImage = `linear-gradient(135deg, rgba(10,46,56,0.85), rgba(11,79,60,0.85)), url('${bgUrl}')`;
+            // Overlay hijau dengan alpha 0.2 (sangat tipis)
+            heroSection.style.backgroundImage = `linear-gradient(135deg, rgba(10,46,56,0.2), rgba(11,79,60,0.2)), url('${bgUrl}')`;
             heroSection.style.backgroundSize = 'cover';
             heroSection.style.backgroundPosition = 'center';
+          } else {
+            // fallback gradient tanpa gambar
+            heroSection.style.backgroundImage = `linear-gradient(135deg, #0a2e38, #0b4f3c)`;
           }
           document.getElementById('hero-judul').innerText = judulHero;
           document.getElementById('hero-subjudul').innerText = subjudulHero;
+        } else {
+          // jika tidak ada data hero, gunakan gradient default tanpa gambar
+          document.getElementById('hero-section').style.backgroundImage = `linear-gradient(135deg, #0a2e38, #0b4f3c)`;
         }
 
-        // Profil
+        // ========== PROFIL ==========
         const nama = profilMap.get('nama_masjid') || 'Masjid Nur';
         const tagline = profilMap.get('tagline') || 'Rahmatan Lil Alamin';
         const visi = profilMap.get('visi') || 'Menjadi pusat peradaban Islam';
@@ -388,7 +388,7 @@
         document.getElementById('email-link').innerText = email;
         document.getElementById('maps-link').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(alamat)}`;
 
-        // Jadwal
+        // ========== JADWAL ==========
         const sholatMap = new Map(); jadwalSholatArr.forEach(i => i.sholat && i.waktu && sholatMap.set(i.sholat.toLowerCase(), i.waktu));
         const imamMap = new Map(); jadwalImamArr.forEach(i => i.sholat && i.nama_imam && imamMap.set(i.sholat.toLowerCase(), i.nama_imam));
         const muadzinMap = new Map(); jadwalMuadzinArr.forEach(i => i.sholat && i.nama_muadzin && muadzinMap.set(i.sholat.toLowerCase(), i.nama_muadzin));
@@ -403,7 +403,7 @@
           tbody.insertAdjacentHTML('beforeend', row);
         }
 
-        // Kajian
+        // ========== KAJIAN ==========
         const kajianGrid = document.getElementById('kajian-grid');
         kajianGrid.innerHTML = '';
         if (kajianArr.length) {
@@ -417,7 +417,7 @@
           });
         } else { kajianGrid.innerHTML = '<div class="col-span-full text-center text-gray-500">Belum ada data kajian</div>'; }
 
-        // Pengurus
+        // ========== PENGURUS ==========
         const pengurusGrid = document.getElementById('pengurus-grid');
         pengurusGrid.innerHTML = '';
         if (pengurusArr.length) {
@@ -434,7 +434,7 @@
           });
         } else { pengurusGrid.innerHTML = '<div class="col-span-full text-center text-gray-500">Data pengurus belum tersedia</div>'; }
 
-        // Keuangan
+        // ========== KEUANGAN ==========
         const keuanganTbody = document.getElementById('keuangan-tbody');
         keuanganTbody.innerHTML = '';
         if (keuanganArr.length) {
@@ -448,7 +448,7 @@
           });
         } else { keuanganTbody.innerHTML = '<tr><td colspan="4" class="text-center py-6">Belum ada laporan keuangan</td></tr>'; }
 
-        // Galeri
+        // ========== GALERI ==========
         const galeriGrid = document.getElementById('galeri-grid');
         galeriGrid.innerHTML = '';
         if (galeriArr.length) {
@@ -463,7 +463,7 @@
           });
         } else { galeriGrid.innerHTML = '<div class="col-span-full text-center text-gray-500">Belum ada foto galeri</div>'; }
 
-        // Sosial Media
+        // ========== SOSIAL MEDIA ==========
         const socialContainer = document.getElementById('social-icons');
         socialContainer.innerHTML = '';
         const platformIcons = { facebook: 'fab fa-facebook', instagram: 'fab fa-instagram', youtube: 'fab fa-youtube', twitter: 'fab fa-twitter', tiktok: 'fab fa-tiktok', whatsapp: 'fab fa-whatsapp' };
@@ -479,7 +479,7 @@
           socialContainer.innerHTML = '<span class="text-gray-500 text-sm">Media sosial belum ditambahkan</span>';
         }
 
-        // Selesai
+        // Selesai loading
         const loading = document.getElementById('loading-screen');
         const main = document.getElementById('main-content');
         loading.style.opacity = '0';
